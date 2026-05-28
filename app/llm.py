@@ -20,7 +20,7 @@ class LLMClients:
             base_url=f"{VLLM_URL}/v1",
             api_key="not-needed",
             temperature=0.2,
-            max_tokens=6144,
+            max_tokens=16384,
             # Disable Qwen3's <think> tags for structured nodes — they confuse JSON parsing.
             extra_body={"chat_template_kwargs": {"enable_thinking": False}},
         )
@@ -33,7 +33,7 @@ class LLMClients:
             base_url=f"{VLLM_URL}/v1",
             api_key="not-needed",
             temperature=0.5,
-            max_tokens=8192,
+            max_tokens=16384,
             extra_body={"chat_template_kwargs": {"enable_thinking": True}},
         )
 

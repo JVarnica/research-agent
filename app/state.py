@@ -5,24 +5,24 @@ from typing import TypedDict, Annotated, Literal
 from typing_extensions import NotRequired
 from pydantic import BaseModel, Field
 
-
-# Custom reducer for cross-node URL dedup
-def union_unique(left: list[str], right: list[str]) -> list[str]:
-    """Merge two lists preserving order, dropping duplicates. 
-    Used by `seen_urls` so parallel search nodes can share what's been scraped."""
-    seen = set(left)
-    out = list(left)
-    for item in right:
-        if item not in seen:
-            seen.add(item)
-            out.append(item)
-    return out
-
 class Query(BaseModel):
     """A search query with a one-line rationale. The rationale forces 
     the model to commit to *why* it's running this query."""
     id: str
-    query: str = Field(description="2-6 keyword search query, no full sentences")
+    query: str = Field(
+        min_length=4, max_length=100,
+        description=(
+            "Precise SearXNG query, 4-10 words."
+            "No vague or full questions. "
+            "Include a qualifier such as 'paper', 'formula', example', "
+            "explained, 'documentation', 'timeline'. "
+            "Avoid weakwords like: thing, stuff, it, this, use, good, bad. "
+            "Good example: 'multi-head attention transformer explained'. "
+            "Good example: 'Roman Empire collapse causes'. "
+            "Bad example: 'multi head attention function'. "
+            "Bad example: 'Roman empire nation "
+            )
+        )
     rationale: str = Field(description="Why this query advances the research, one sentence")
 
 
@@ -105,7 +105,7 @@ class OverallState(TypedDict):
     raw_docs: Annotated[list[Document], operator.add]
     doc_summaries: Annotated[list[DocSummary], operator.add]
     claims: Annotated[list[Claim], operator.add]
-    seen_urls: Annotated[list[str], union_unique]
+    seen_urls: Annotated[list[str], operator.add]
     written_sections: Annotated[list[WrittenSection], operator.add]
 
     # ---- Loop control (single-writer, overwrite semantics) ----

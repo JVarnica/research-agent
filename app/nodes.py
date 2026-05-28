@@ -30,7 +30,7 @@ def _emit(task_id: str, event: str, **data: Any):
 
 QUERY_GEN_PROMPT = """You are a research planner. Generate 3-4 diverse search queries \
 to investigate the user's question. Each query should explore a different angle. 
-Queries must be 2-6 keywords, NOT full sentences. Provide a one-sentence rationale per query."""
+Provide a one-sentence rationale per query."""
 
 
 class InitialQueries(Query.__class__):  # placeholder, see below
@@ -38,8 +38,13 @@ class InitialQueries(Query.__class__):  # placeholder, see below
 
 
 class QuerySet(BaseModel):
-    queries: list[Query] = Field(min_length=2, max_length=5)
-
+    # Small set of diverse queries from question 
+    queries: list[Query] = Field(
+        min_length=2, max_length=5,
+        description=(
+            "Generate 3-5 diverse search queries, each with a rationale. "
+            "Do not generate near-duplicate queries, each query should explore a different angle of the question.")
+    )
 
 async def generate_queries(state: OverallState) -> dict:
     task_id = state["task_id"]
@@ -62,43 +67,41 @@ async def generate_queries(state: OverallState) -> dict:
 
 
 # ============================================================
-# Node 2: fan-out search — one branch per query
+# Node 2: SEquential Search 
 # ============================================================
 
-def fan_out_search(state: OverallState) -> list[Send]:
-    """Conditional edge: dispatch one search_query branch per pending query.
-    Only dispatches queries that haven't been searched yet (by ID)."""
-    already_searched_query_ids = {d.source_query_id for d in state.get("raw_docs", [])}
-    pending = [q for q in state["search_queries"] if q.id not in already_searched_query_ids]
-    
-    return [
-        Send("search_one_query", {
-            "task_id": state["task_id"],
-            "query": q,
-            "seen_urls": list(state.get("seen_urls", [])),
-        })
-        for q in pending
-    ]
-
-
-async def search_one_query(branch_input: dict) -> dict:
+async def search_queries_seq(state: OverallState) -> dict:
     """Runs in parallel — one instance per query."""
-    task_id = branch_input["task_id"]
-    query: Query = branch_input["query"]
-    seen_urls: set[str] = set(branch_input["seen_urls"])
+    task_id = state["task_id"]
     
-    _emit(task_id, "searching", query=query.query)
-    
+    already_searched_ids = {d.source_query_id for d in state.get("raw_docs", [])
+                            if getattr(d, "source_query_id", None) is not None
+                            }
+    pending_queries = [q for q in state["search_queries"] if q.id not in already_searched_ids]
 
-    docs = await search_and_scrape_query(query, seen_urls=seen_urls, max_results=3)
+    seen_urls: set[str] = set(state.get("seen_urls", []))
+
+    new_docs: list[Document] = []
+    new_urls: list[str] = []
+
+    for query in pending_queries:
     
-    _emit(task_id, "search_complete", 
-          query=query.query, 
-          urls=[d.url for d in docs],
-          new_doc_count=len(docs))
+        _emit(task_id, "searching", query=query.query)
+        docs = await search_and_scrape_query(query, seen_urls=seen_urls, max_results=15, target_docs=5)
+
+        for d in docs:
+            if d.url not in seen_urls:
+                new_docs.append(d)
+                new_urls.append(d.url)
+                seen_urls.add(d.url)
+    
+        _emit(task_id, "search_complete", 
+            query=query.query, 
+            urls=[d.url for d in docs],
+            new_doc_count=len(docs))
     
     return {
-        "raw_docs": docs,
+        "raw_docs": new_docs,
         "seen_urls": [d.url for d in docs],
     }
 
@@ -153,6 +156,9 @@ async def summarize_one_doc(branch_input: dict) -> dict:
         # The schema lets the model leave doc_id/url unset; we own them
         summary.doc_id = doc.id
         summary.url = doc.url
+        logger.debug("summary doc_id=%s url=%s relevant=%s findings=%s quotes=%s",
+                doc.id, doc.url, summary.relevant,
+                summary.key_findings, summary.quotes)
     except Exception as e:
         logger.exception(f"summarize failed for {doc.url}: {e}")
         # Return a "not relevant" placeholder so the fan-out completes cleanly
@@ -188,13 +194,15 @@ class ClaimSet(BaseModel):
 async def extract_claims(state: OverallState) -> dict:
     task_id = state["task_id"]
     _emit(task_id, "stage", stage="extracting_claims", message="Building claims from sources")
-    
-    relevant = [s for s in state["doc_summaries"] if s.relevant]
-    if not relevant:
+
+    covered_doc_ids = {did for c in state.get("claims", []) for did in c.source_doc_ids}
+    new_relevant = [s for s in state["doc_summaries"] if s.relevant and s.doc_id not in covered_doc_ids]
+    if not new_relevant:
+        _emit(state["task_id"], "claims_extracted", count=0)
         logger.warning(f"task {task_id}: no relevant summaries to extract claims from")
         return {"claims": []}
     
-    summaries_json = json.dumps([s.model_dump() for s in relevant], indent=2)
+    summaries_json = json.dumps([s.model_dump() for s in new_relevant], indent=2)
     structured = get_clients().structured_llm(ClaimSet)
     
     result: ClaimSet = await structured.ainvoke([
@@ -209,6 +217,7 @@ async def extract_claims(state: OverallState) -> dict:
               source_doc_ids=c.source_doc_ids, confidence=c.confidence)
         for c in result.claims
     ]
+    logger.debug("claims extracted: %s", claims)
     _emit(task_id, "claims_extracted", count=len(claims))
     return {"claims": claims}
 
@@ -267,7 +276,7 @@ def reflect_router(state: OverallState) -> str:
         return "plan_report"
     if state["research_loop_count"] >= state["max_research_loops"]:
         return "plan_report"
-    return fan_out_search(state)
+    return "search_all_queries"
 
 
 # ============================================================
@@ -291,7 +300,7 @@ async def plan_report(state: OverallState) -> dict:
     task_id = state["task_id"]
     _emit(task_id, "stage", stage="planning", message="Structuring the report")
     
-    claims_json = json.dumps([c.model_dump() for c in state["claims"]], indent=2)
+    claims_json = json.dumps([c.model_dump() for c in state["claims"]])
     structured = get_clients().structured_llm(ReportPlan)
     
     plan: ReportPlan = await structured.ainvoke([
@@ -365,7 +374,7 @@ async def write_section(branch_input: dict) -> dict:
     
     _emit(task_id, "writing_section", title=section.title)
     
-    claims_json = json.dumps([c.model_dump() for c in claims], indent=2)
+    claims_json = json.dumps([c.model_dump() for c in claims])
     llm = get_clients().writer_llm(temperature=0.5, max_tokens=4096)
     
     resp = await llm.ainvoke([

@@ -2,7 +2,7 @@ import json
 import asyncio
 import logging
 from fastapi import APIRouter, Request, HTTPException
-from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.responses import Response, JSONResponse
 from pydantic import BaseModel, Field
 
 from .task import create_task, get_task, cancel_task, TaskStatus
@@ -31,7 +31,7 @@ async def create_research(req: ResearchRequest, request: Request):
 
 @router.get("/research/{task_id}")
 async def research_status(task_id: str, request: Request):
-    """Get current status + final report (if complete)."""
+    """Get current status"""
     deps = request.app.state.deps
     record = await get_task(deps.redis, task_id)
     if record is None:
@@ -41,7 +41,7 @@ async def research_status(task_id: str, request: Request):
 
 @router.get("/research/{task_id}/events")
 async def research_polling(task_id: str, request: Request, since: int = 0):
-    """Polling endpoint. Returns events from `since` onward + current task state."""
+    """Polling endpoint. Returns events from `since` onward + current task state + report"""
     deps = request.app.state.deps
     record = await get_task(deps.redis, task_id)
     if record is None:
@@ -55,9 +55,18 @@ async def research_polling(task_id: str, request: Request, since: int = 0):
         "next_cursor": since + len(events),
         "status": record["status"],
         "report": record.get("final_report") if record["status"] == "complete" else None,
-        "error": record.get("error", "") if record["status"] == "failed" else None,
+        "error": record.get("error", "") if record["status"] == 
+        "failed" else None,
     }
 
+# just for debugging/
+@router.get("/research/{task_id}/artifacts")
+async def research_artifacts(task_id: str, request: Request):
+    redis = request.app.state.deps.redis
+    raw = await redis.get(f"dpr:artifacts:{task_id}")
+    if raw is None:
+        raise HTTPException(404, "artifacts not found (task may not exist or has expired)")
+    return Response(content=raw, media_type="application/json")
 
 @router.delete("/research/{task_id}")
 async def research_cancel(task_id: str, request: Request):

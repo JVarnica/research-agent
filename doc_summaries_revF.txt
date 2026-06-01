@@ -1,0 +1,353 @@
+{
+  "doc_id": "7d50ee6b37b3",
+  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of",
+  "relevant": false,
+  "key_findings": [
+    "The for...of statement iterates over values of an iterable object.",
+    "The iterable objects include arrays, strings, Maps, Sets, and NodeLists.",
+    "The loop executes a statement for each value in the iterable, using a variable to reference the current value.",
+    "The loop exits when the iterator returns an object with done: true."
+  ],
+  "quotes": [
+    "The for...of statement executes a loop that operates on a sequence of values sourced from an iterable object.",
+    "Iterable objects include instances of built-ins such as Array, String, TypedArray, Map, Set, NodeList (and other DOM collections), as well as the arguments object, generators produced by generator functions, and user-defined iterables.",
+    "A for...of loop operates on the values sourced from an iterable one by one in sequential order.",
+    "The for...of loop exits when the iterator has completed (the next() result is an object with done: true)."
+  ]
+}
+{
+  "doc_id": "241fd6d4e484",
+  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/of",
+  "relevant": false,
+  "key_findings": [
+    "The Array.of() method creates a new Array instance from a variable number of arguments, regardless of number or type of the arguments.",
+    "Array.of(7) creates an array with a single element, 7, whereas Array(7) creates an empty array with a length property of 7.",
+    "The Array.of() method is a generic factory method that can be used with any constructor function that accepts a single argument representing the length of the new array.",
+    "The of() method can be called on any constructor function that accepts a single argument representing the length of the new array."
+  ],
+  "quotes": [
+    "The Array.of() static method creates a new Array instance from a variable number of arguments, regardless of number or type of the arguments.",
+    "Array.of(7); // [7] Array(7); // array of 7 empty slots",
+    "The Array.of() method is a generic factory method. For example, if a subclass of Array inherits the of() method, the inherited of() method will return new instances of the subclass instead of Array instances.",
+    "The of() method can be called on any constructor function that accepts a single argument representing the length of the new array."
+  ]
+}
+{
+  "doc_id": "222257b98d94",
+  "url": "https://www.wordwebonline.com/en/CAUSE",
+  "relevant": false,
+  "key_findings": [],
+  "quotes": []
+}
+{
+  "doc_id": "19196a6f610d",
+  "url": "https://doi.org/10.1007/s41999-023-00752-7",
+  "relevant": false,
+  "key_findings": [
+    "The study focuses on fall risk associated with diuretics and SGLT2 inhibitors in older heart failure patients, not the fall of the Byzantine Empire.",
+    "The research aims to assist clinicians in safe (de)prescribing of diuretics and SGLT2 inhibitors in older heart failure patients.",
+    "Both heart failure and its treatment with diuretics or SGLT2 inhibitors increase fall risk in older adults.",
+    "Diuretics and SGLT2 inhibitors have overlapping and differing fall-related adverse effects, with diuretics showing more risk factors like electrolyte abnormalities."
+  ],
+  "quotes": [
+    "Both heart failure and its treatment with diuretics or SGLT2 inhibitors increase fall risk in older adults.",
+    "Diuretics and SGLT2 inhibitors not only have various fall-related adverse effects, which partly overlap (e.g. tendency to cause hypotension), but also differ: compared to SGLT2is, diuretics display more fall risk factors (e.g. electrolyte abnormalities).",
+    "The tendency to cause fall-related adverse effects may differ according to diuretic sub-class or even within sub-classes.",
+    "Decisions to continue or deprescribe diuretics or SGLT2is in fall-prone older HF patients are generally highly complex, but detailed insight into fall-related side effect profiles of these drug classes, and practical clinical decision tools and resources, assist prescribers in rational and personalized (de)prescribing."
+  ]
+}
+{
+  "doc_id": "075c9129e72a",
+  "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Display/In_flow_and_out_of_flow",
+  "relevant": false,
+  "key_findings": [
+    "All elements that are in flow will be laid out using block and inline layout.",
+    "The root element (html) is out of flow, as the container for everything in our document.",
+    "A floated item is first laid out according to where it would be in normal flow, then taken out of flow and moved to the left as far as possible.",
+    "Out-of-flow items create a new Block Formatting Context (BFC), and everything inside them can be seen as a mini layout, separate from the rest of the page."
+  ],
+  "quotes": [
+    "All elements that are in flow will be laid out using this method.",
+    "The root element, therefore, is out of flow, as the container for everything in our document, and establishes the Block Formatting Context for the document.",
+    "As a float it is first laid out according to where it would be in normal flow, then taken out of flow and moved to the left as far as possible.",
+    "Out-of-flow items create a new Block Formatting Context (BFC), and therefore, everything inside them can be seen as a mini layout, separate from the rest of the page."
+  ]
+}
+{
+  "doc_id": "b4d09ede2e45",
+  "url": "https://english.stackexchange.com/questions/15488/what-is-the-distinction-between-role-and-r%C3%B4le-with-a-circumflex",
+  "relevant": false,
+  "key_findings": [
+    "The American Heritage Dictionary lists 'rôle' as an alternative spelling for 'role', but only in the context of a character or part played by a performer.",
+    "The circumflex in 'rôle' was historically used to denote the removal of the letter 'L' in pronunciation, though it has no semantic meaning.",
+    "The spelling 'rôle' was standard in the UK parliament until a few decades ago, as noted in The Public Whip.",
+    "The use of 'rôle' is still considered more proper in the UK, despite the US preference for 'role'."
+  ],
+  "quotes": [
+    "The American Heritage Dictionary of the English Language gives four definitions of role, the first of which is - also rôle A character or part played by a performer.",
+    "The circumflex was simply to denote the removed letter 'L', and held no semantic meaning.",
+    "The spelling 'rôle' was standardised spelling used in the UK parliament until a few decades ago, see Google: 'rôle' site:theyworkforyou.com",
+    "It is still generally considered more proper in the UK."
+  ]
+}
+{
+  "doc_id": "7a021951869f",
+  "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview",
+  "relevant": false,
+  "key_findings": [
+    "HTTP is a client-server protocol where requests are initiated by the user-agent, typically a web browser.",
+    "HTTP is designed to be extensible, allowing for new functionality through headers and agreements between clients and servers.",
+    "HTTP is stateless by default, but cookies can be used to create stateful sessions.",
+    "HTTP relies on TCP for reliable communication, though experiments are ongoing to use more efficient transport protocols like QUIC."
+  ],
+  "quotes": [
+    "HTTP is a client-server protocol: requests are sent by one entity, the user-agent (or a proxy on behalf of it).",
+    "HTTP is stateless: there is no link between two requests being successively carried out on the same connection.",
+    "HTTP is generally designed to be human-readable, even with the added complexity introduced in HTTP/2 by encapsulating HTTP messages into frames.",
+    "Experiments are in progress to design a better transport protocol more suited to HTTP. For example, Google is experimenting with QUIC which builds on UDP to provide a more reliable and efficient transport protocol."
+  ]
+}
+{
+  "doc_id": "4a6e39d9b930",
+  "url": "https://en.wikipedia.org/wiki/Role",
+  "relevant": false,
+  "key_findings": [
+    "The document discusses the concept of 'role' in sociology, not the historical fall of the Byzantine Empire.",
+    "It defines a role as a set of behaviors, rights, obligations, beliefs, and norms in a social situation.",
+    "The document outlines different types of roles, such as achieved, ascribed, and transitory roles.",
+    "It also mentions how roles are influenced by societal, genetic, cultural, and situational factors."
+  ],
+  "quotes": [
+    "A role (also rôle or social role) is a set of connected behaviors, rights, obligations, beliefs, and norms as conceptualized by people in a social situation.",
+    "Roles may be achieved or ascribed or they can be accidental in different situations.",
+    "An achieved role is a position that a person assumes voluntarily which reflects personal skills, abilities, and effort.",
+    "An ascribed role is a position assigned to individuals or groups without regard for merit but because of certain traits beyond their control."
+  ]
+}
+{
+  "doc_id": "1e650f2371a0",
+  "url": "https://developer.mozilla.org/en-US/docs/Glossary/Leading",
+  "relevant": false,
+  "key_findings": [],
+  "quotes": []
+}
+{
+  "doc_id": "160bf1e00cc5",
+  "url": "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/keyPoints",
+  "relevant": false,
+  "key_findings": [
+    "The keyPoints attribute indicates, in the range [0,1], how far the object is along the path for each associated value in keyTimes.",
+    "The keyPoints attribute is used with SVG elements to define the progress along a motion path at specific times.",
+    "Each progress value in the keyPoints list corresponds to a value in the keyTimes attribute list.",
+    "If there are any errors in the value specification, such as bad values or mismatched numbers of values, that's an error."
+  ],
+  "quotes": [
+    "The keyPoints attribute indicates, in the range [0,1], how far the object is along the path for each associated value in keyTimes.",
+    "The distance is calculated along the path specified by the path attribute.",
+    "Each progress value in the list corresponds to a value in the keyTimes attribute list.",
+    "If there are any errors in the value specification (i.e., bad values, too many or too few values), then that's an error."
+  ]
+}
+{
+  "doc_id": "d97cb9016e4e",
+  "url": "https://en.key-test.ru/",
+  "relevant": false,
+  "key_findings": [],
+  "quotes": []
+}
+{
+  "doc_id": "896235397652",
+  "url": "https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values",
+  "relevant": false,
+  "key_findings": [
+    "The document lists the standard values for the KeyboardEvent.key property, which identifies keys on a keyboard.",
+    "The 'Alt' key is described as the Alternative key, used for generating special characters or causing special actions when combined with other keys.",
+    "The 'AltGraph' key, also known as AltGr, enables the ISO Level 3 shift modifier, allowing for additional characters beyond standard Shift and Alt.",
+    "The 'CapsLock' key toggles the capital character lock on and off for subsequent input."
+  ],
+  "quotes": [
+    "The Alt (Alternative) key. Allows typing control characters.",
+    "The AltGr or AltGraph (Alternate Graphics) key. Enables the ISO Level 3 shift modifier (where Shift is the level 2 modifier).",
+    "The Caps Lock key. Toggles the capital character lock on and off for subsequent input.",
+    "The Control, Ctrl, or Ctl key. Allows typing control characters."
+  ]
+}
+{
+  "doc_id": "9676ec59d4b0",
+  "url": "https://www.grammarly.com/blog/commonly-confused-words/was-vs-were/?msockid=054e01d1f368640a05f216b9f24d655a",
+  "relevant": false,
+  "key_findings": [
+    "Was and were are both simple past tense forms of the verb to be, but they are not interchangeable.",
+    "Were is the regular second-person singular simple past tense form of to be ('you were') and all plural simple past forms ('they were', 'we were').",
+    "Were becomes the correct first-person and third-person singular form in the subjunctive mood, used for hypothetical situations.",
+    "Use 'If I were' to express a hypothetical or wishful condition, while 'If I was' is used for factual past conditions."
+  ],
+  "quotes": [
+    "Was and were are both simple past tense forms of the verb to be, but they are not interchangeable.",
+    "Were is the regular second-person singular simple past tense form of to be ('you were') and all plural simple past forms ('they were,' 'we were').",
+    "Were becomes the correct first-person and third-person singular form in the subjunctive mood, which is used to talk about hypothetical situations.",
+    "Use 'If I were' to begin a sentence expressing a condition contrary to the current reality."
+  ]
+}
+{
+  "doc_id": "957348ba70fd",
+  "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Fragmentation",
+  "relevant": false,
+  "key_findings": [
+    "The CSS fragmentation module defines how content is displayed when it is broken and flows across multiple pages, regions, or columns.",
+    "Fragmentation occurs when an inline box wraps onto multiple lines, such as in CSS multi-column layout.",
+    "Pagination is a process used to avoid awkward breaks, such as halfway through a line of text or with a lone word on its own page.",
+    "The module explains how content breaks across fragmentation containers and how such breaks can be controlled by the author."
+  ],
+  "quotes": [
+    "The CSS fragmentation module defines how content is displayed when it is broken (fragmented) and flows across multiple pages, regions, or columns.",
+    "Fragmentation occurs when an inline box wraps onto multiple lines. This can happen when using layout features such as CSS multi-column layout: For example, when a block spans more than one column inside a column layout container, or spans a page break when printed.",
+    "To avoid awkward breaks, such as halfway through a line of text or with a lone word on its own page, browsers can move content that would otherwise fall across the page break in a process is called pagination.",
+    "The module explains how content breaks across fragmentation containers and how such breaks can be controlled by the author."
+  ]
+}
+{
+  "doc_id": "87000e93de8c",
+  "url": "https://grammarbrain.com/where-vs-were/",
+  "relevant": false,
+  "key_findings": [
+    "The document does not address the fall of the Byzantine Empire.",
+    "The document explains the difference between 'where' and 'were' in grammar.",
+    "It clarifies that 'where' is an adverb and conjunction referring to location or situation.",
+    "It states that 'were' is the past tense of the verb 'to be' used with plural or 'you'."
+  ],
+  "quotes": [
+    "Where is used to refer to a location or occurrence of a situation.",
+    "Were is used in the simple past of the verb 'to be'.",
+    "Where and were are not homophones (words with similar sounds or spellings).",
+    "The word 'were' is a past tense of the verb 'to be'."
+  ]
+}
+{
+  "doc_id": "f27cd379e689",
+  "url": "https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/term_role",
+  "relevant": false,
+  "key_findings": [
+    "The 'term' role is used to identify a word or phrase with an optional corresponding definition.",
+    "The 'term' role is equivalent in semantics to the HTML <dfn> element and the <dt> element within a <dl>.",
+    "The 'term' role should not be used on interactive elements like links, as it can interfere with assistive technology.",
+    "The accessible name for a term should be the term itself, and aria-label or aria-labelledby should not be used."
+  ],
+  "quotes": [
+    "The term role can be used for a word or phrase with an optional corresponding definition.",
+    "The term role is used to explicitly identify a word or phrase for which a definition has been provided by the author or is expected to be provided by the user.",
+    "Don't use the role=\"term\" on interactive elements like links because it can interfere with assistive technology users ability to interact with the element.",
+    "The accessible name should be the term itself, so DO NOT use aria-label or aria-labelledby."
+  ]
+}
+{
+  "doc_id": "7a3925cfd7f2",
+  "url": "https://www.grammar-monster.com/easily_confused/wear_were_were_where.htm",
+  "relevant": false,
+  "key_findings": [
+    "The document does not address the fall of the Byzantine Empire.",
+    "The document explains the meanings and usage of the words 'wear,' 'were,' 'we're,' and 'where.'",
+    "The verb 'to wear' can mean to have clothing on or to cause deterioration.",
+    "The word 'were' is the past tense of 'are' and is used for all persons except 'I.'"
+  ],
+  "quotes": [
+    "To Wear. 'To wear' has two meanings: (1) to have clothing on, and (2) to deteriorate.",
+    "We're"
+  ]
+}
+{
+  "doc_id": "f2ece97e4e08",
+  "url": "https://my.clevelandclinic.org/health/diseases/9792-dissociative-identity-disorder-multiple-personality-disorder",
+  "relevant": false,
+  "key_findings": [],
+  "quotes": []
+}
+{
+  "doc_id": "497bc0881c69",
+  "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/How_to/Layout_cookbook/Contribute_a_recipe",
+  "relevant": false,
+  "key_findings": [
+    "The document explains how to contribute a recipe to the CSS Layout Cookbook, which is a resource for web developers.",
+    "A recipe in the CSS Layout Cookbook includes a live example, a downloadable version, and a detailed page with sections like Introduction, Requirements, Recipe, Decisions, and Accessibility concerns.",
+    "The live example must be stored in the CSS Examples GitHub repo and include both HTML and CSS code that demonstrates a specific layout pattern.",
+    "The document emphasizes that the CSS should be minimal and focused on demonstrating the pattern, avoiding unnecessary styling for aesthetics."
+  ],
+  "quotes": [
+    "The simplest possible version of any useful web design pattern. Each line of CSS that you include should be there to help demonstrate the pattern, so leave out anything there purely to make the example look pretty.",
+    "A recipe consists of: A live example, stored in the CSS Examples GitHub repo. A downloadable version of that example, also stored in the CSS Examples repo. A page in the CSS layout cookbook section of the site, which should include the following components: Introduction, Requirements, Recipe, Decisions, Useful fallbacks or alternative methods (when relevant), Accessibility concerns, Browser compatibility (only for CSS properties not fully supported), Additional resources",
+    "The live examples on cookbook pages, such as for centering an element, and elsewhere on MDN allow readers to play with the code and change relevant parts without being overwhelmed with all of the code.",
+    "Useful tips: Do not indent the CSS and HTML inside the text areas; instead, align the code with the start of the lines. This will look better when it is rendered."
+  ]
+}
+{
+  "doc_id": "261510cdd8de",
+  "url": "https://en.m.wikipedia.org/wiki/Dissociative_identity_disorder",
+  "relevant": false,
+  "key_findings": [
+    "Dissociative identity disorder (DID) is characterized by the presence of at least two personality states or 'alters'.",
+    "The disorder was previously known as multiple personality disorder (MPD) and was recognized as a diagnosis in DSM-III in 1975.",
+    "An epidemic of DID spread across North America in the 1980s and 1990s, closely tied to the satanic panic and the use of hypnosis in therapy.",
+    "The lifetime prevalence of DID in the general population is between 1.1–1.5%, and it is diagnosed 6–9 times more often in women than in men."
+  ],
+  "quotes": [
+    "Dissociative identity disorder (DID), previously known as multiple personality disorder (MPD), is a dissociative disorder characterized by the presence of at least two personality states or 'alters'.",
+    "After multiple personality disorder (MPD) was recognized as a diagnosis in DSM-III in 1975, an epidemic of the disorder spread across North America, closely tied to the satanic panic.",
+    "Therapists began using hypnosis on patients, believing they were discovering alters and recovering forgotten memories of satanic ritual abuse.",
+    "The lifetime prevalence, according to two epidemiological studies in the US and Turkey, is between 1.1–1.5% of the general population and 3.9% of those admitted to psychiatric hospitals in Europe and North America."
+  ]
+}
+{
+  "doc_id": "b4699aadec22",
+  "url": "https://www.grammarly.com/blog/commonly-confused-words/was-vs-were/?msockid=1a32ef3ee7b365913333f856e689647f",
+  "relevant": false,
+  "key_findings": [
+    "Was and were are both simple past tense forms of the verb to be, but they are not interchangeable.",
+    "Were is the regular second-person singular simple past tense form of to be (\"you were\") and all plural simple past forms (\"they were,\" \"we were\").",
+    "Were becomes the correct first-person and third-person singular form in the subjunctive mood, which is used to talk about hypothetical situations.",
+    "Whether you say \"If I was\" or \"If I were\" depends on whether you’re referring to an imaginary situation or something that actually happened."
+  ],
+  "quotes": [
+    "Was and were are both simple past tense forms of the verb to be, but they are not interchangeable.",
+    "Were is the regular second-person singular simple past tense form of to be (\"you were\") and all plural simple past forms (\"they were,\" \"we were\").",
+    "Were becomes the correct first-person and third-person singular form in the subjunctive mood, which is used to talk about hypothetical situations.",
+    "Whether you say \"If I was\" or \"If I were\" depends on whether you’re referring to an imaginary situation or something that actually happened."
+  ]
+}
+{
+  "doc_id": "95ce02b7b32c",
+  "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_domain_name",
+  "relevant": false,
+  "key_findings": [
+    "Domain names provide a human-readable address for web servers, replacing complex IP addresses.",
+    "A domain name is structured with parts like TLD (Top-Level Domain) and labels, read from right to left.",
+    "TLDs like .com, .org, and .net are generic and do not require specific criteria for use.",
+    "Local TLDs like .us, .fr, and .se can indicate language or country-specific resources.",
+    "The .gov TLD is reserved for government departments, and .edu is for educational institutions.",
+    "Domain names are not owned but leased for a period, with renewal options available.",
+    "Registrars manage domain name registrations and track administrative information.",
+    "The process of finding and registering a domain name involves checking availability through a registrar or using the 'whois' command."
+  ],
+  "quotes": [
+    "Domain names are a key part of the Internet infrastructure. They provide a human-readable address for any web server available on the Internet.",
+    "A domain name has a simple structure made of several parts (it might be one part only, two, three…), separated by dots and read from right to left:",
+    "The .gov TLD is only allowed to be used by government departments.",
+    "The process is quite straightforward: Go to a registrar's website. Usually there is a prominent 'Get a domain name' call to action. Click on it."
+  ]
+}
+{
+  "doc_id": "599b99822a75",
+  "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/What_is_accessibility",
+  "relevant": false,
+  "key_findings": [
+    "Accessibility is the practice of making websites usable by as many people as possible.",
+    "The World Health Organization estimates that 15% of the world's population has some form of disability.",
+    "285 million people are estimated to be visually impaired worldwide, with 39 million being blind and 246 million having low vision.",
+    "466 million people worldwide have disabling hearing loss."
+  ],
+  "quotes": [
+    "Accessibility is the practice of making your websites usable by as many people as possible.",
+    "Over a billion people, about 15% of the world's population, have some form of disability.",
+    "285 million people are estimated to be visually impaired worldwide: 39 million are blind and 246 million have low vision.",
+    "466 million people worldwide have disabling hearing loss."
+  ]
+}

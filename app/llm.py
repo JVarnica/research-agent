@@ -19,14 +19,25 @@ class LLMClients:
             model=VLLM_MODEL,
             base_url=f"{VLLM_URL}/v1",
             api_key="not-needed",
-            temperature=0.2,
-            max_tokens=16384,
+            temperature=0.3,
+            max_tokens=8196,
             # Disable Qwen3's <think> tags for structured nodes — they confuse JSON parsing.
             extra_body={"chat_template_kwargs": {"enable_thinking": False}},
         )
+        self._cheap = ChatOpenAI(
+            model=VLLM_MODEL,
+            base_url=f"{VLLM_URL}/v1",
+            api_key="not-needed",
+            temperature=0.2,
+            max_tokens=4096,
+            # Disable Qwen3's <think> tags for structured nodes — they confuse JSON parsing.
+            extra_body={
+                "repetition_penalty": 1.1,
+                "chat_template_kwargs": {"enable_thinking": False}
+                },
+        )
 
 
-    
         """For section writers — let Qwen3 reason before writing. Better prose quality."""
         self._writer = ChatOpenAI(
             model=VLLM_MODEL,
@@ -34,13 +45,19 @@ class LLMClients:
             api_key="not-needed",
             temperature=0.5,
             max_tokens=16384,
-            extra_body={"chat_template_kwargs": {"enable_thinking": True}},
+            extra_body={
+                "chat_template_kwargs": {"enable_thinking": True}},
         )
 
 
     def structured_llm(self, schema: Type[T]) -> BaseChatModel:
         
         return self._fast.with_structured_output(schema, method="json_schema")
+    
+
+    def struct_cheap_llm(self, schema: Type[T]) -> BaseChatModel:
+        
+        return self._cheap.with_structured_output(schema, method="json_schema")
     
     def writer_llm(self, **kwargs):
         return self._writer.bind(**kwargs)

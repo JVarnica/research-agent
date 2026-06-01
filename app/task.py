@@ -128,7 +128,13 @@ async def _run_graph(
         
         
         final_report = final_state.get("final_report", "")
+        artifacts = {
+            "doc_summaries": [s.model_dump() for s in final_state.get("doc_summaries", [])],
+            "claims": [c.model_dump() for c in final_state.get("claims", [])],
+            "search_queries": [q.model_dump() for q in final_state.get("search_queries", [])],
+        }
         await _update_status(redis, task_id, TaskStatus.COMPLETE, final_report=final_report)
+        await redis.set(f"dpr:artifacts:{task_id}", json.dumps(artifacts), ex=TASK_TTL_SECONDS)
         await channel.emit("complete", {"task_id": task_id, "report": final_report})
     
     except asyncio.CancelledError:

@@ -2,17 +2,18 @@ import asyncio
 import json
 import logging
 import uuid
+import re
 from typing import Any
 import httpx
 from pydantic import BaseModel, Field
 
 from langgraph.types import Send
 from .state import (
-    OverallState, Query, Document, DocSummary, Claim,
+    HitVerdict, OverallState, Query, Document, DocSummary, Claim, SearchHit,
     ReportPlan, SectionPlan, WrittenSection, ReflectionResult,
 )
 from .llm import get_clients
-from .search import search_and_scrape_query
+from .search import search_query, _collect_ordered_doc_ids, _rewrite_citations, scrape_hits
 from .events import get_channel
 
 logger = logging.getLogger(__name__)
@@ -28,29 +29,38 @@ def _emit(task_id: str, event: str, **data: Any):
 # Node 1: generate initial queries from the original question
 # ============================================================
 
-QUERY_GEN_PROMPT = """You are a research planner. Generate 3-4 diverse search queries \
-to investigate the user's question. Each query should explore a different angle. 
-Provide a one-sentence rationale per query."""
+QUERY_GEN_PROMPT = """You are a research planner. Generate 3-5 diverse search queries
+to investigate the user's question. Each query explores a different angle and has
+a one-sentence rationale.
+
+Route each query to one category:
+- Technical / ML / scientific questions: mix 'science' (papers, theory) with
+  'it' (libraries, docs, implementations), and optionally 'general' for context.
+- Historical / cultural questions: mix 'general' (context, narrative) with
+  'science' (academic analysis). Do NOT use 'it' for non-technical topics.
+- Current events: include 'news' alongside 'general'.
+
+Default to 'general' when unsure."""
 
 
 class InitialQueries(Query.__class__):  # placeholder, see below
     pass
 
-
 class QuerySet(BaseModel):
-    # Small set of diverse queries from question 
+    """A diverse set of queries covering different angles of the question."""
     queries: list[Query] = Field(
         min_length=2, max_length=5,
         description=(
-            "Generate 3-5 diverse search queries, each with a rationale. "
-            "Do not generate near-duplicate queries, each query should explore a different angle of the question.")
+            "3-5 queries, each exploring a distinct angle. "
+            "No near-duplicates — two queries that differ only in wording count as one."
+        ),
     )
 
 async def generate_queries(state: OverallState) -> dict:
     task_id = state["task_id"]
     _emit(task_id, "stage", stage="generating_queries", message="Planning search strategy")
     
-    structured = get_clients().structured_llm(QuerySet)
+    structured = get_clients().struct_cheap_llm(QuerySet)
     result: QuerySet = await structured.ainvoke([
         {"role": "system", "content": QUERY_GEN_PROMPT},
         {"role": "user", "content": state["original_query"]},
@@ -58,55 +68,136 @@ async def generate_queries(state: OverallState) -> dict:
     
     # Stamp fresh IDs (model may or may not provide them; we own ID space)
     queries = [
-        Query(id=f"q_{uuid.uuid4().hex[:8]}", query=q.query, rationale=q.rationale)
+        Query(id=f"q_{uuid.uuid4().hex[:8]}", query=q.query, 
+              rationale=q.rationale, category=q.category)
         for q in result.queries
     ]
     _emit(task_id, "queries_generated", count=len(queries),
-          queries=[{"query": q.query, "rationale": q.rationale} for q in queries]) #emits all queries 
+          queries=[{"query": q.query, "rationale": q.rationale, "category": q.category} for q in queries]) #emits all queries 
     return {"search_queries": queries}
-
 
 # ============================================================
 # Node 2: SEquential Search 
 # ============================================================
 
 async def search_queries_seq(state: OverallState) -> dict:
-    """Runs in parallel — one instance per query."""
     task_id = state["task_id"]
-    
-    already_searched_ids = {d.source_query_id for d in state.get("raw_docs", [])
-                            if getattr(d, "source_query_id", None) is not None
-                            }
-    pending_queries = [q for q in state["search_queries"] if q.id not in already_searched_ids]
-
+    already = {h.source_query_id for h in state.get("search_hits", [])}
+    pending = [q for q in state["search_queries"] if q.id not in already]
     seen_urls: set[str] = set(state.get("seen_urls", []))
 
-    new_docs: list[Document] = []
-    new_urls: list[str] = []
-
-    for query in pending_queries:
-    
+    new_hits: list[SearchHit] = []
+    for query in pending:
         _emit(task_id, "searching", query=query.query)
-        docs = await search_and_scrape_query(query, seen_urls=seen_urls, max_results=15, target_docs=5)
+        hits = await search_query(query, seen_urls=seen_urls, max_results=15)
+        for h in hits:
+            if h.url not in seen_urls:
+                new_hits.append(h)
+                seen_urls.add(h.url)
+        _emit(task_id, "search_complete",
+              query=query.query, hit_count=len(hits))
 
-        for d in docs:
-            if d.url not in seen_urls:
-                new_docs.append(d)
-                new_urls.append(d.url)
-                seen_urls.add(d.url)
-    
-        _emit(task_id, "search_complete", 
-            query=query.query, 
-            urls=[d.url for d in docs],
-            new_doc_count=len(docs))
-    
     return {
-        "raw_docs": new_docs,
-        "seen_urls": [d.url for d in docs],
+        "search_hits": new_hits,
+        "seen_urls": [h.url for h in new_hits],
     }
 
+TRIAGE_CHUNK = 12
+
+async def _triage_chunk(question: str, chunk: list[SearchHit]) -> set[str]:
+    hits_json = json.dumps([
+        {"id": h.id, "title": h.title, "url": h.url, "snippet": h.snippet}
+        for h in chunk
+    ])
+    structured = get_clients().struct_cheap_llm(ScrapeDecision)
+    try:
+        decision: ScrapeDecision = await structured.ainvoke([
+            {"role": "user", "content": PRE_SCRAPE_PROMPT.format(question=question, hits_json=hits_json)},
+        ])
+        valid = {h.id for h in chunk}
+        return {v.id for v in decision.verdicts if v.keep and v.id in valid}
+    except Exception as e:
+        logger.warning(f"triage chunk failed, keeping none: {e}")
+        return set()
+
+class ScrapeDecision(BaseModel):
+    verdicts: list[HitVerdict] = Field(min_length=1, max_length=50)
+#========================================================
+#Pre-scrape sort
+#========================================================
+PRE_SCRAPE_PROMPT = """You are triaging search results before scraping. Scraping is expensive — be STRICT.
+
+Research question: {question}
+
+You will receive search hits (id, title, URL, snippet). Judge EVERY hit individually from its title and snippet alone and return a verdict for each.
+
+Default to keep=false. Set keep=true ONLY if the title or snippet names something SPECIFIC to the research question — \
+a relevant person, place, event, date, or clearly on-topic discussion. A hit that merely shares a common word with the \
+question ("role", "fall", "cause", "long", "key") in an unrelated context is NOT relevant.
+
+Always drop (keep=false):
+- Dictionary, thesaurus, grammar, or vocabulary pages ("Definition of…", "100 Words to Use Instead of…", Wiktionary).
+- Software/technical documentation unrelated to the question (Azure roles, SQL Server, API docs) — unless the question is about that software.
+- Medical/health pages unless the question is medical.
+- OS or product help pages ("How to get help in Windows").
+- Generic hub/category pages, vendor landing pages, SEO listicles.
+- Video, forum, or Q&A links unless the snippet clearly shows substantive on-topic content.
+
+When unsure, drop it. There are plenty of hits; a wasted scrape costs more than a missed marginal page.
+
+Hits:
+{hits_json}
+"""
+
+async def pre_scrape(state: OverallState) -> dict:
+    task_id = state["task_id"]
+    hits: list[SearchHit] = state.get("search_hits", [])
+    if not hits:
+        return {"hits_to_scrape": []}
+
+    _emit(task_id, "stage", stage="triaging",
+          message=f"Triaging {len(hits)} hits before scrape")
+
+    MAX_SCRAPE = 15  # ceiling guard against pathological over-keeping
+    try:
+        chunks = [hits[i:i + TRIAGE_CHUNK] for i in range(0, len(hits), TRIAGE_CHUNK)]
+        results = await asyncio.gather(*[
+            _triage_chunk(state["original_query"], chunk) for chunk in chunks
+        ])
+        keep_ids = set().union(*results) if results else set()
+        kept = [h for h in hits if h.id in keep_ids]
+
+        MAX_SCRAPE = 15
+        if len(kept) > MAX_SCRAPE:
+            kept = sorted(kept, key=lambda h: h.search_score, reverse=True)[:MAX_SCRAPE]
+
+        logger.info(f"pre_scrape: {len(hits)} hits → {len(kept)} kept across {len(chunks)} chunks")
+        _emit(task_id, "triage_complete", before=len(hits), after=len(kept))
+      
+        if len(kept) > MAX_SCRAPE:
+            kept = sorted(kept, key=lambda h: h.search_score, reverse=True)[:MAX_SCRAPE]
+    except Exception as e:
+        logger.exception(f"pre_scrape failed, falling back to top-N by score: {e}")
+        kept = sorted(hits, key=lambda h: h.search_score, reverse=True)[:MAX_SCRAPE]
+
+    logger.info(f"pre_scrape: {len(hits)} hits → {len(kept)} kept")
+    _emit(task_id, "triage_complete", before=len(hits), after=len(kept))
+    return {"hits_to_scrape": kept}
+
+async def scrape_node(state: OverallState) -> dict:
+    task_id = state["task_id"]
+    hits = state.get("hits_to_scrape", [])
+    if not hits:
+        return {"raw_docs": []}
+
+    _emit(task_id, "stage", stage="scraping",
+          message=f"Scraping {len(hits)} approved URLs")
+    docs = await scrape_hits(hits)
+    _emit(task_id, "scrape_complete", scraped=len(docs))
+    return {"raw_docs": docs}
+
 # ============================================================
-# Node 3: fan-out summarization — one branch per doc
+# Node: fan-out summarization — one branch per doc
 # ============================================================
 
 def fan_out_summarize(state: OverallState) -> list[Send]:
@@ -121,16 +212,21 @@ def fan_out_summarize(state: OverallState) -> list[Send]:
         for d in pending
     ]
 
-
 SUMMARIZE_PROMPT = """You are reading ONE source document to extract findings relevant to a research question.
 
 Research question: {question}
 
+First, relevance:
+- Set relevant=false if the document does not actually address the question. A document that only shares a word with the question in an unrelated context is NOT relevant.
+- If relevant=false, return an empty key_findings and quotes list.
+
 Rules:
 - Set relevant=false if the document does not actually address the question.
-- key_findings: 3-5 SPECIFIC facts, numbers, or claims from the document. Each one sentence.
+- key_findings: 3-8 findings. DO NOT invent findings to reach count. 2 sharp findings are better than 3 padded ones
+- Each finding must state a specific date, number, named person/place/event or causal mechanism. 
+- A causal-mechanism finding states cause then effect (X caused Y because Z), not a vague description.
 - Do not hedge or generalize. Quote specifics.
-- quotes: up to 2 short verbatim quotes (under 25 words each) that support your findings.
+- quotes: up to 4 short verbatim quotes (under 25 words each) that support your findings. Omit if add nothing
 
 Document title: {title}
 URL: {url}
@@ -138,12 +234,11 @@ URL: {url}
 Document content:
 {content}"""
 
-
 async def summarize_one_doc(branch_input: dict) -> dict:
     task_id = branch_input["task_id"]
     doc: Document = branch_input["doc"]
     
-    structured = get_clients().structured_llm(DocSummary)
+    structured = get_clients().struct_cheap_llm(DocSummary)
     try:
         summary: DocSummary = await structured.ainvoke([
             {"role": "user", "content": SUMMARIZE_PROMPT.format(
@@ -156,6 +251,7 @@ async def summarize_one_doc(branch_input: dict) -> dict:
         # The schema lets the model leave doc_id/url unset; we own them
         summary.doc_id = doc.id
         summary.url = doc.url
+        summary.title = doc.title
         logger.debug("summary doc_id=%s url=%s relevant=%s findings=%s quotes=%s",
                 doc.id, doc.url, summary.relevant,
                 summary.key_findings, summary.quotes)
@@ -165,9 +261,8 @@ async def summarize_one_doc(branch_input: dict) -> dict:
         summary = DocSummary(doc_id=doc.id, url=doc.url, relevant=False, 
                              key_findings=[], quotes=[])
     
-    _emit(task_id, "doc_summarized", url=doc.url, relevant=summary.relevant)
+    _emit(task_id, "doc_summarized", doc_title=summary.title, key_findings=summary.key_findings, relevant=summary.relevant)
     return {"doc_summaries": [summary]}
-
 
 # ============================================================
 # Node 4: extract claims from all relevant summaries
@@ -177,8 +272,9 @@ EXTRACT_PROMPT = """You are aggregating findings from multiple sources into ATOM
 
 Research question: {question}
 
-You will receive a JSON list of document summaries. Extract specific, verifiable claims.
-- Each claim is ONE sentence stating ONE fact.
+You will receive a JSON list of document summaries, each with a doc_id and key_findings
+-  One claim = ONE idea, stated WITH its specifics: include the relevant date, number, named entity, or causal mechanism.
+- No adjectives, framing, or filler. If a sentence contains no specific, it is not a claim — drop it.
 - Cite source documents by their doc_id in source_doc_ids.
 - Multiple sources supporting the same claim → high confidence; single source → medium; conflicting → low.
 - Do NOT include generic background or filler. Only specific claims that help answer the question.
@@ -188,7 +284,7 @@ Summaries:
 
 
 class ClaimSet(BaseModel):
-    claims: list[Claim] = Field(min_length=1, max_length=30)
+    claims: list[Claim] = Field(min_length=1, max_length=40)
 
 
 async def extract_claims(state: OverallState) -> dict:
@@ -202,7 +298,7 @@ async def extract_claims(state: OverallState) -> dict:
         logger.warning(f"task {task_id}: no relevant summaries to extract claims from")
         return {"claims": []}
     
-    summaries_json = json.dumps([s.model_dump() for s in new_relevant], indent=2)
+    summaries_json = json.dumps([s.model_dump() for s in new_relevant])
     structured = get_clients().structured_llm(ClaimSet)
     
     result: ClaimSet = await structured.ainvoke([
@@ -231,12 +327,24 @@ answer the research question, or if a follow-up search loop is needed.
 
 Research question: {question}
 
+Previous understanding (from prior reflection):
+{previous_understanding}
+
 Current claims:
 {claims_json}
 
+Queries already searched ( do not repeat or paraphrase these):
+{previous_queries}
+
+Has this new evidence changed your understanding? Are these claims sufficient or is there still a gap?
+
 If sufficient, set is_sufficient=true and leave follow_up_queries empty.
+
 If gaps exist, set is_sufficient=false, describe the gap in one sentence, and provide 1-3 \
-follow-up queries targeting that gap. Queries must be 2-6 keywords."""
+follow-up queries targeting that gap.Each follow-up must explore a distinctly \
+different angle from what's already been tried — different keywords, different framing, \
+or a different sub-question. If you can't think of genuinely new angles, set \
+is_sufficient=true instead of repeating."""
 
 
 async def reflect(state: OverallState) -> dict:
@@ -244,29 +352,37 @@ async def reflect(state: OverallState) -> dict:
     loop = state.get("research_loop_count", 0)
     _emit(task_id, "stage", stage="reflecting", loop=loop)
     
-    claims_json = json.dumps([c.model_dump() for c in state["claims"]], indent=2)
+    claims_json = json.dumps([c.model_dump() for c in state["claims"]])
+    prior_queries = state.get("search_queries", [])
+    previous_queries = ( "\n".join(f"- {q.query}" for q in prior_queries) or "(none yet)")
+
     structured = get_clients().structured_llm(ReflectionResult)
     
     result: ReflectionResult = await structured.ainvoke([
         {"role": "user", "content": REFLECT_PROMPT.format(
-            question=state["original_query"], claims_json=claims_json,
+            question=state["original_query"], claims_json=claims_json, previous_queries=previous_queries, previous_understanding=state.get("understanding_history", "")
         )},
     ])
     
     # Stamp IDs on follow-ups
     new_queries = [
-        Query(id=f"q_{uuid.uuid4().hex[:8]}", query=q.query, rationale=q.rationale)
+        Query(id=f"q_{uuid.uuid4().hex[:8]}", query=q.query, rationale=q.rationale, category=q.category)
         for q in result.follow_up_queries
     ]
+    is_sufficient = result.is_sufficient or not new_queries
+    if not is_sufficient and not new_queries:
+        logger.warning("reflect: all follow-ups were duplicates — forcing termination")
+
     _emit(task_id, "reflection", 
-          sufficient=result.is_sufficient, 
-          gap=result.knowledge_gap if not result.is_sufficient else "",
+          sufficient=is_sufficient, 
+          gap=result.knowledge_gap if not is_sufficient else "",
           new_queries=len(new_queries))
     
     return {
-        "is_sufficient": result.is_sufficient,
+        "is_sufficient": is_sufficient,
         "search_queries": new_queries,  # extends via operator.add
         "research_loop_count": loop + 1,
+        "understanding_history": [result.current_understanding],  # extends via operator.add
     }
 
 
@@ -291,7 +407,7 @@ You have these claims to organize:
 Produce a plan with 3-5 sections. Each section:
 - Has a distinct angle (no overlap between sections).
 - References specific claim IDs that belong in it.
-- Every claim should belong to at least one section if relevant; orphan claims OK if minor.
+- Every claim should belong to one section ONLY if relevant; orphan claims OK if minor.
 
 Section ordering should flow logically (background → core → implications, or by theme)."""
 
@@ -364,7 +480,14 @@ Use ONLY these claims. Cite by claim ID in brackets, e.g. [c_a1b2c3].
 Claims:
 {claims_json}
 
-Write 200-400 words. Be specific. No hedging. No generic preamble. Output markdown."""
+Write 200- 800 words of flowing prose for a curious reader.
+-Connect facts with reasoning words: 'because', 'therefore', 'however', 
+'consequently', etc. Don't just list facts in a sequence.
+-Be specific about names, dates and figures. Avoid generalizations and hedging.
+-Use only facts present in the provided claims. Do not add names, dates, or details not in the claims, even if you know them."
+-Do not end the section with a summary paragraph; stop when the content is covered.
+
+Output markdown."""
 
 
 async def write_section(branch_input: dict) -> dict:
@@ -421,17 +544,16 @@ async def stitch_report(state: OverallState) -> dict:
     docs_by_id = {d.id: d for d in state["raw_docs"]}
     claims_by_id = {c.id: c for c in state["claims"]}
     
-    used_doc_ids: set[str] = set()
-    for sec in ordered:
-        for claim_id in sec.citations_used:
-            if claim_id in claims_by_id:
-                used_doc_ids.update(claims_by_id[claim_id].source_doc_ids)
-    
+    # Walk the actual citation markers, not citations_used metadata — markers are truth
+    ordered_doc_ids = _collect_ordered_doc_ids(ordered, claims_by_id)
+    doc_to_ref = {did: i + 1 for i, did in enumerate(ordered_doc_ids)}
+
     references = []
-    for i, did in enumerate(sorted(used_doc_ids), 1):
-        if did in docs_by_id:
-            d = docs_by_id[did]
-            references.append(f"{i}. [{d.title or d.url}]({d.url})")
+    for did in ordered_doc_ids:
+        d = docs_by_id.get(did)
+        if d is not None:
+            references.append(f"{doc_to_ref[did]}. [{d.title or d.url}]({d.url})")
+
     
     # Assemble — no LLM call here, deterministic stitch. We get the model 
     # to write a short intro/conclusion in a single small call.
@@ -444,7 +566,8 @@ async def stitch_report(state: OverallState) -> dict:
         "",
     ]
     for sec in ordered:
-        report_parts.extend([f"## {sec.title}", "", sec.body_markdown, ""])
+        rewritten = _rewrite_citations(sec.body_markdown, claims_by_id, doc_to_ref)
+        report_parts.extend([f"## {sec.title}", "", rewritten, ""])
     
     report_parts.extend([
         "## Conclusion", "",
@@ -459,13 +582,18 @@ async def stitch_report(state: OverallState) -> dict:
 
 
 class IntroConclusion(BaseModel):
-    intro: str = Field(description="2-3 sentence opening that frames the question")
-    conclusion: str = Field(description="2-3 sentence conclusion summarizing the answer")
+    intro: str = Field(
+        description="Few sentence opening that frames the question",
+        max_length=900
+        )
+    conclusion: str = Field(
+        description="3-4 sentence conclusion summarizing the answer",
+        max_length=800)
 
 
 async def _write_intro_conclusion(state: OverallState, sections: list[WrittenSection]) -> dict:
     section_summaries = "\n".join(f"- {s.title}: {s.body_markdown[:200]}..." for s in sections)
-    structured = get_clients().structured_llm(IntroConclusion)
+    structured = get_clients().struct_cheap_llm(IntroConclusion)
     result: IntroConclusion = await structured.ainvoke([
         {"role": "user", "content": (
             f"Write an intro and conclusion for a report answering: {state['original_query']}\n\n"

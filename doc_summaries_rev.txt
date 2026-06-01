@@ -1,0 +1,178 @@
+{
+  "doc_id": "fb2843aa4730",
+  "url": "https://en.wikipedia.org/wiki/Decline_of_the_Byzantine_Empire",
+  "relevant": true,
+  "key_findings": [
+    "The Battle of Manzikert in 1071 led to the loss of most of Anatolia to the Seljuks and triggered a ten-year civil war.",
+    "The Sack of Constantinople in 1204 resulted in the city being partitioned between the Republic of Venice and a Crusader army, leading to the establishment of the Latin Empire.",
+    "The Fall of Gallipoli in 1354 marked the point of no return for the Byzantine Empire, as the Ottoman Turks crossed into Europe and the empire was powerless to stop them.",
+    "The Byzantine Empire's final decline started in the 11th century and ended in the 15th century with its destruction in 1453."
+  ],
+  "quotes": [
+    "The Battle of Manzikert in 1071, which saw emperor Romanos IV Diogenes captured by the army of Seljuk Sultan Alp Arslan. The defeat led to a Byzantine civil war lasting ten years, in which eight different revolts took place.",
+    "The Sack of Constantinople in 1204 saw the weakened empire partitioned between the Republic of Venice and a Crusader army led by Boniface I, Marquess of Montferrat.",
+    "The Fall of Gallipoli in 1354 saw the Ottoman Turks cross into Europe, while the empire was powerless to stop them.",
+    "The Byzantine Empire's final decline started in the 11th century, and ended 400 years later in the Byzantine Empire's destruction in the 15th century."
+  ]
+}
+{
+  "doc_id": "aa594703ff18",
+  "url": "https://en.wikipedia.org/wiki/Fall_of_Constantinople",
+  "relevant": true,
+  "key_findings": [
+    "The Fall of Constantinople occurred on 29 May 1453, marking the end of the Byzantine Empire.",
+    "The city was captured after a 53-day siege beginning on 6 April 1453.",
+    "The Ottoman army, commanded by Sultan Mehmed II, significantly outnumbered the Byzantine defenders.",
+    "The fall of Constantinople marked the end of the Roman Empire, which had lasted nearly 1,500 years.",
+    "The Ottoman cannons, specifically bombards, breached the Theodosian walls using gunpowder technology.",
+    "The city's population was severely affected, with 4,000 Byzantine civilians killed and 30,000 enslaved or sold.",
+    "The Byzantine Empire had been weakened by centuries of conflict, including the Fourth Crusade and the Black Death.",
+    "By 1453, the empire had shrunk to a few square kilometers, with its cultural center at Mystras in the Peloponnese."
+  ],
+  "quotes": [
+    "The fall of Constantinople and of the Byzantine Empire was a watershed moment of the Late Middle Ages, marking the effective end of the Roman Empire...",
+    "The Ottoman cannons repeatedly fired massive cannonballs weighing 500 kilograms (1,100 lb) over 1.5 kilometres (0.93 mi) which created gaps in the Theodosian walls...",
+    "The city had been an imperial capital since its consecration in 330 under Roman emperor Constantine the Great.",
+    "The Empire of Trebizond, an independent successor state that formed in the aftermath of the Fourth Crusade, was also present at the time on the coast of the Black Sea."
+  ]
+}
+{
+  "doc_id": "512264222188",
+  "url": "https://en.m.wikipedia.org/wiki/Byzantine_Empire",
+  "relevant": true,
+  "key_findings": [
+    "The Byzantine Empire fell in 1453 when Constantinople was captured by the Ottoman Empire.",
+    "The empire was severely fragmented in 1204 following the sack of Constantinople during the Fourth Crusade.",
+    "Justinian I (r. 527–565) briefly reconquered much of Italy and the western Mediterranean coast.",
+    "The empire experienced recurring cycles of decline and recovery throughout its history."
+  ],
+  "quotes": [
+    "The fall of Constantinople to the Ottomans in 1453 brought the empire to an end.",
+    "The empire was severely fragmented in 1204, following the sack of Constantinople during the Fourth Crusade;",
+    "Justinian I (r. 527–565) briefly reconquered much of Italy and the western Mediterranean coast.",
+    "Throughout its remaining history, experienced recurring cycles of decline and recovery."
+  ]
+}
+{
+  "doc_id": "457d8902e868",
+  "url": "https://www.britannica.com/place/Byzantine-Empire",
+  "relevant": true,
+  "key_findings": [
+    "The Byzantine Empire fell to Ottoman Turkish onslaughts in 1453.",
+    "The Byzantine Empire was a melting-pot society with social mobility that belies the stereotype of an immobile caste-ridden society.",
+    "The empire's central geographical position served it ill after the 10th century due to new problems of organization and assimilation.",
+    "The empire collapsed when its administrative structures could no longer support the burden of leadership thrust upon it by military conquests."
+  ],
+  "quotes": [
+    "the eastern half of the Roman Empire, which survived for a thousand years after the western half had crumbled into various feudal kingdoms and which finally fell to Ottoman Turkish onslaughts in 1453.",
+    "Barbarian illiteracy, in consequence, obscures the early generations of more than one family destined to rise to prominence in the empire’s military or civil service. Byzantium was a melting-pot society...",
+    "The conquests of that age presented new problems of organization and assimilation, and those the emperors had to confront at precisely the time when older questions of economic and social policy pressed for answers in a new and acute form.",
+    "The empire finally collapsed when its administrative structures could no longer support the burden of leadership thrust upon it by military conquests."
+  ]
+}
+{
+  "doc_id": "5a4c399c5998",
+  "url": "https://www.worldhistory.org/Byzantine_Empire/",
+  "relevant": true,
+  "key_findings": [
+    "The Byzantine Empire existed from 330 to 1453.",
+    "The Byzantine Empire was the longest-lasting medieval power.",
+    "The name 'Byzantine' was coined by 16th-century historians based on the city's original name, Byzantium.",
+    "The Byzantine Empire terminated on Tuesday 29 May 1453, when the Ottoman Sultan Mehmed II conquered Constantinople."
+  ],
+  "quotes": [
+    "The Byzantine Empire existed from 330 to 1453.",
+    "The Byzantine Empire was the longest-lasting medieval power.",
+    "The name 'Byzantine' was coined by 16th-century historians based on the fact that the capital city's first name was Byzantium before it changed to Constantinople.",
+    "Most historians do agree that the Byzantine Empire terminated on Tuesday 29 May 1453, when the Ottoman Sultan Mehmed II conquered Constantinople."
+  ]
+}
+{
+  "doc_id": "62fe844ce520",
+  "url": "https://www.britannica.com/place/Byzantine-Empire/Byzantine-decline-and-subjection-to-Western-influences-1025-1260",
+  "relevant": true,
+  "key_findings": [
+    "The Macedonian dynasty's continuity was seen as crucial to the empire's prosperity, with Zoe and Theodora ruling after Constantine VIII's death in 1028.",
+    "Between 1025 and 1081, there were 13 emperors, indicating political instability and frequent changes in leadership.",
+    "The theme system in Anatolia, a key to the empire's defensive and offensive power, was rapidly breaking down in the 11th century.",
+    "The Seljuq Turks, after conquering Persia in 1055, began raiding Byzantine Anatolia, leading to the Battle of Manzikert in 1071.",
+    "The Battle of Manzikert resulted in Romanus IV Diogenes being blinded and the Seljuqs gaining control over much of Anatolia.",
+    "The Normans conquered Bari, the last Byzantine stronghold in Italy, in 1071, marking the end of Byzantine rule in the region.",
+    "The schism between the churches of Rome and Constantinople in 1054 highlighted the growing cultural and ecclesiastical divide between East and West.",
+    "The Byzantine Empire's military strength was no longer sufficient to hold back its enemies by the late 11th century."
+  ],
+  "quotes": [
+    "The successors of Basil II were rather the creatures of circumstances, because they did not make and seldom molded.",
+    "The landowners in the provinces appreciated the dangers more readily than the government in Constantinople, and they made those dangers an excuse to enlarge their estates in defiance of all the laws passed in the 10th century.",
+    "The Seljuqs were thus justified in continuing their raids and were even encouraged to do so.",
+    "The final loss of Italy seemed to underline the fact of the permanent division between the Greek East and the Latin West."
+  ]
+}
+{
+  "doc_id": "44ef0b037b5b",
+  "url": "https://www.history.org.uk/podcasts/categories/440/podcast/468/decline-and-fall-of-the-byzantine-empire",
+  "relevant": true,
+  "key_findings": [
+    "The 4th Crusade had a significant impact on the Byzantine Empire.",
+    "Byzantines took back Constantinople in 1261, marking a partial recovery of their Empire.",
+    "The Rise of the Ottomans played a crucial role in the eventual fall of the Byzantine Empire.",
+    "Social changes in the last years before collapse included the emergence of the Mesoi and aristocratic entrepreneurs."
+  ],
+  "quotes": [
+    "The impact of the 4th Crusade on the Byzantine Empire.",
+    "1261: The Byzantines take back Constantinople and the remnants of their Empire",
+    "The Rise of the Ottomans.",
+    "Social changes in the last years before collapse. The emergence of the Mesoi and aristocratic entrepreneurs."
+  ]
+}
+{
+  "doc_id": "5a51c75eb129",
+  "url": "https://www.britannica.com/event/East-West-Schism-1054",
+  "relevant": true,
+  "key_findings": [
+    "The East-West Schism in 1054 resulted in mutual excommunications between the Eastern Church (led by Michael Cerularius) and the Western Church (led by Pope Leo IX).",
+    "The schism was exacerbated by theological disputes, including the Roman addition of 'and the Son' to the Nicene Creed, which the Eastern Church resented.",
+    "The political transfer of the empire's seat from Rome to Constantinople contributed to the growing estrangement between the Eastern and Western Churches.",
+    "The final break in 1054 was marked by mutual excommunications, which were not resolved until 1965 when Pope Paul VI and Patriarch Athenagoras I revoked them."
+  ],
+  "quotes": [
+    "The mutual excommunications by the pope and the patriarch in 1054 became a watershed in church history.",
+    "The Roman churches, without consulting the East, added 'and the Son' (Latin: Filioque) to the Nicene Creed.",
+    "The relation of the Byzantine church to the Roman may be described as one of growing estrangement from the 5th to the 11th century.",
+    "There had been mutual excommunications before, but they had not resulted in permanent schisms."
+  ]
+}
+{
+  "doc_id": "a9f15a0ea06e",
+  "url": "https://www.metmuseum.org/essays/the-religious-relationship-between-byzantium-and-the-west",
+  "relevant": true,
+  "key_findings": [
+    "The Fourth Crusade of 1204 marked the definitive break between the Latin and Greek churches.",
+    "The Council of Lyon in 1274 attempted to unify the churches, with Michael VIII Palaiologos swearing obedience to the Roman church.",
+    "The 1439 union decree proved ephemeral and was renounced after the collapse of the Byzantine Empire.",
+    "The union efforts were driven by both political and theological interests, with the papacy seeking subordination of the Byzantine Empire."
+  ],
+  "quotes": [
+    "After the Fourth Crusade of 1204, the break between the two churches was considered definitive.",
+    "Michael’s representatives swore obedience to the Roman church and its faith.",
+    "The union decree of the July 6, 1439, proved ephemeral and, after the collapse of the empire, the Byzantine church renounced the agreement.",
+    "The papacy hoped for political subordination of the Byzantine empire."
+  ]
+}
+{
+  "doc_id": "152f3e9f8787",
+  "url": "https://en.wikipedia.org/wiki/Byzantine%E2%80%93Ottoman_wars",
+  "relevant": true,
+  "key_findings": [
+    "The Byzantine Empire failed to recover fully under the Palaiologos dynasty, leading to increasingly disastrous defeats at the hands of the Ottomans.",
+    "The Byzantines lost all of their Anatolian territory within 90 years of Osman I's establishment of the Ottoman beylik.",
+    "Byzantine Thrace was lost to the Ottomans by 1400.",
+    "The Ottoman Turks were seen as liberators of Anatolians, leading to many conversions to Islam and undermining the Byzantine Orthodox power base."
+  ],
+  "quotes": [
+    "The Byzantines, already having been in a weak state even before the dismemberment of their Empire following the Fourth Crusade, failed to recover fully under the rule of the Palaiologos dynasty.",
+    "Within 90 years of Osman I's establishment of the Ottoman beylik, the Byzantines lost all of their Anatolian territory.",
+    "Byzantine Thrace was lost to the Ottomans by 1400.",
+    "The Turks under Osman I began their raids into Byzantine Anatolia; Söğüt and Eskişehir were taken in 1265 and 1289 respectively."
+  ]
+}

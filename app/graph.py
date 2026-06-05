@@ -42,7 +42,7 @@ def build_graph(checkpointer=None):
     g.add_edge("pre_scrape", "scrape_node")
     
     # After all search branches finish, fan out to summarize
-    g.add_conditional_edges("scrape_node", fan_out_summarize, ["summarize_one_doc"])
+    g.add_conditional_edges("scrape_node", fan_out_summarize, ["summarize_one_doc", "extract_claims"])
     
     # After all summarize branches finish, extract claims
     g.add_edge("summarize_one_doc", "extract_claims")

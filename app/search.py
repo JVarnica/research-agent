@@ -62,7 +62,7 @@ async def search_searxng(query: str, categories: str = "general", max_results: i
 async def search_query(
     query: Query,
     seen_urls: set[str],
-    max_results: int = 15,
+    max_results: int,
 ) -> list[SearchHit]:
     """Searxng only — no scraping. Returns hit metadata for the
     pre_scrape node to triage."""
@@ -131,52 +131,54 @@ async def scrape_hits(hits: list[SearchHit]) -> list[Document]:
     logger.info(f"scrape: {len(hits)} candidates → {len(docs)} good docs")
     return docs
 
-# Matches [c_xxx] or [c_xxx, c_yyy, c_zzz] with flexible whitespace
-_CITE_RE = re.compile(r"\[(c_[a-zA-Z0-9_]+(?:\s*,\s*c_[a-zA-Z0-9_]+)*)\]")
-
-def _collect_ordered_doc_ids(ordered_sections, claims_by_id) -> list[str]:
+# Matches [d_xxx] or [d_xxx, d_yyy, d_zzz] with flexible whitespace.
+# Citations now point directly at doc_ids — the claim layer is purely an
+_CITE_RE = re.compile(
+    r"\[(d_[a-f0-9]{12}(?:\s*,\s*d_[a-f0-9]{12})*)\]"
+)
+ 
+ 
+def _strip_d(tok: str) -> str:
+    """'d_fb2843aa4730' -> 'fb2843aa4730'. Defensive against accidental whitespace."""
+    t = tok.strip()
+    return t[2:] if t.startswith("d_") else t
+ 
+ 
+def collect_ordered_doc_ids(ordered_sections) -> list[str]:
     """Doc-ids in order of first appearance across the report — standard
     academic numbering, reads better than sorted-by-id."""
     seen: set[str] = set()
     order: list[str] = []
     for sec in ordered_sections:
-        for body_chunk in [sec.body_markdown]:
-            for match in _CITE_RE.finditer(body_chunk):
-                claim_ids = [c.strip() for c in match.group(1).split(",")]
-                for cid in claim_ids:
-                    claim = claims_by_id.get(cid)
-                    if claim is None:
-                        continue
-                    for did in claim.source_doc_ids:
-                        if did not in seen:
-                            seen.add(did)
-                            order.append(did)
+        for match in _CITE_RE.finditer(sec.body_markdown):
+            for tok in match.group(1).split(","):
+                did = _strip_d(tok)
+                if did and did not in seen:
+                    seen.add(did)
+                    order.append(did)
     return order
-
+ 
 # Collapse runs of 2+ adjacent numeric citation groups: [8, 9][8, 9, 10, 11] -> [8, 9, 10, 11]
 _NUMCITE_RUN = re.compile(r"(?:\[\d+(?:\s*,\s*\d+)*\]\s*){2,}")
-
-def _merge_adjacent_numeric_cites(text: str) -> str:
+ 
+def merge_adjacent_numeric_cites(text: str) -> str:
     def merge(m: re.Match) -> str:
         nums = sorted({int(n) for n in re.findall(r"\d+", m.group(0))})
         return "[" + ", ".join(map(str, nums)) + "]"
     return _NUMCITE_RUN.sub(merge, text)
 
-def _rewrite_citations(body: str, claims_by_id, doc_to_ref) -> str:
-    """Replace [c_xxx] / [c_xxx, c_yyy] with [1] / [1, 3], deduplicated and sorted."""
+def rewrite_citations(body: str, doc_to_ref) -> str:
+    """Replace [d_xxx] / [d_xxx, d_yyy] with [1] / [1, 3], dedup + sort.
+    Doc-ids that don't resolve are dropped silently rather than left as raw markers."""
     def replace(m: re.Match) -> str:
-        claim_ids = [c.strip() for c in m.group(1).split(",")]
         refs: list[int] = []
-        for cid in claim_ids:
-            claim = claims_by_id.get(cid)
-            if claim is None:
-                continue
-            for did in claim.source_doc_ids:
-                n = doc_to_ref.get(did)
-                if n is not None and n not in refs:
-                    refs.append(n)
+        for tok in m.group(1).split(","):
+            did = _strip_d(tok)
+            n = doc_to_ref.get(did)
+            if n is not None and n not in refs:
+                refs.append(n)
         if not refs:
-            return ""  # unresolvable citation — drop it rather than leak the raw id
+            return ""
         refs.sort()
         return "[" + ", ".join(str(r) for r in refs) + "]"
     return _CITE_RE.sub(replace, body)

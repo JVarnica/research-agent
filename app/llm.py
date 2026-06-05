@@ -29,24 +29,24 @@ class LLMClients:
             base_url=f"{VLLM_URL}/v1",
             api_key="not-needed",
             temperature=0.2,
-            max_tokens=4096,
+            max_tokens=2048,
             # Disable Qwen3's <think> tags for structured nodes — they confuse JSON parsing.
             extra_body={
-                "repetition_penalty": 1.1,
                 "chat_template_kwargs": {"enable_thinking": False}
                 },
         )
 
 
-        """For section writers — let Qwen3 reason before writing. Better prose quality."""
+        """For section writers"""
         self._writer = ChatOpenAI(
             model=VLLM_MODEL,
             base_url=f"{VLLM_URL}/v1",
             api_key="not-needed",
             temperature=0.5,
-            max_tokens=16384,
+            max_tokens=8196, # using 4k tokens with bind 
             extra_body={
-                "chat_template_kwargs": {"enable_thinking": True}},
+                "repetition_penalty": 1.1,
+                "chat_template_kwargs": {"enable_thinking": False}},
         )
 
 

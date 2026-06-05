@@ -107,17 +107,25 @@ async def _run_graph(
             "task_id": task_id,
             "original_query": query,
             "max_research_loops": max_research_loops,
+
             "search_queries": [],
+            "searched_queries_ids": [],
+            "search_hits": [],
+            "hits_to_scrape": [],
             "raw_docs": [],
             "doc_summaries": [],
             "claims": [],
+            "understanding_history": [],
+            "reflection_history": [],
+            "reflected_doc_ids": [],
             "seen_urls": [],
             "written_sections": [],
             "research_loop_count": 0,
             "is_sufficient": False,
         }
         
-        config = {"configurable": {"thread_id": task_id}}
+        config = {"configurable": {"thread_id": task_id},
+                  "recursion_limit": 35} # at 25 couldn't finish 3rd loop
 
         run_task = asyncio.create_task(graph.ainvoke(initial_state, config=config))
         watcher = asyncio.create_task(_cancel_watcher(redis, task_id, run_task))

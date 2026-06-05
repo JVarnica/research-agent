@@ -12,10 +12,10 @@ class Query(BaseModel):
     query: str = Field(
         min_length=4, max_length=200,
         description=(
-            "A focused noun phrase or specific question, 5-15 words. "
-            "Include a concrete qualifier like 'paper', 'timeline', 'causes', "
-            "'documentation', or 'explained'. "
-            "Avoid bare keywords, vague phrasing, and weak words "
+            # long phrases don'twork too many matched key words
+            "Search engine query: 4-12 words, keyword style"
+            "NOT natural language questions"
+            "Strip filler words like 'what were', 'how did', 'the role of'. "
             "(thing, stuff, good, bad, use). "
             "Good: 'multi-head attention transformer explained'. "
             "Good: 'Roman Empire collapse causes'. "
@@ -79,6 +79,16 @@ class DocSummary(BaseModel):
     title: str
     url: str
     relevant: bool = Field(description="Does this doc actually help answer the question?")
+    overview: str = Field(
+        default="",
+        description=(
+            " 1-3 sentences: what this document covers, its angle, scope, or argument. "
+            "Helps the section writer use this source in context rather than as "
+            "disconnected facts. Empty string if not relevant."
+        ),
+        max_length=300,
+
+    )
     key_findings: list[str] = Field(
         description="3-8 specific findings, each stating a date, number, named person/place/event. No more than 3 sentences the finding. Empty list if not relevant.",
         max_length=8,
@@ -94,30 +104,60 @@ class Claim(BaseModel):
     findings across docs. The planner organizes these into sections."""
     id: str
     statement: str = Field(
-        description=("ONE atomic fact in one sentence. Must contain at least one specific: "
-            "date, number, named person, named place, or named event. "
-            "If the sentence has two independent facts joined by 'and' or a comma, "
-            "split it into two claims. "
-            "Good: 'Constantinople fell to Mehmed II on 29 May 1453.' "
-            "Bad: 'The empire declined due to military weakness, economic stagnation, "
-            "and religious schism' (three claims fused into one)."),
+        description=(
+            "Short topic label identifying what this claim covers. Include the "
+            "key entity and date or quantity when applicable. "
+            "Good: 'GPT-4 release, March 2023'. "
+            "Good: 'CRISPR-Cas9 mechanism: guide RNA + Cas9 cleavage'. "
+            "Good: 'Lehman Brothers bankruptcy, 15 Sep 2008'. "
+            "Not a full explanation — the rich detail lives in the source doc_summaries."
+        ),
         max_length=150)
     source_doc_ids: list[str] = Field(min_length=1)
     confidence: Literal["high", "medium", "low"]
 
-
 class SectionPlan(BaseModel):
-    """A planned section. `claim_ids` is the contract — the section writer 
-    only gets these claims, nothing else."""
-    id: str
-    title: str
-    angle: str = Field(description="What this section argues or covers in 2-3 sentences", max_length=300)
-    claim_ids: list[str] = Field(min_length=1)
-
+    """A planned section. The writer receives the claims listed here PLUS the
+    doc_summaries those claims point to (ranked by centrality, capped per section).
+    The angle and claim_ids together define what the writer should cover."""
+    id: str 
+    title: str = Field(max_length=150)
+    angle: str = Field(
+        description=(
+            "What this section argues or covers, in 2-4 sentences. "
+            "Be specific about the angle — what the section establishes, in what order, "
+            "and what conclusion it builds toward. "
+            "Good: 'Traces the chronology of the 2008 collapse from the Bear Stearns "
+            "rescue in March through the Lehman bankruptcy on 15 September. Establishes "
+            "that regulatory inaction at three specific decision points enabled the cascade.' "
+            "Bad: 'Covers the 2008 financial crisis.' (generic, no angle)"
+        ),
+        max_length=400
+    )
+    claim_ids: list[str] = Field(min_length=1, max_length=15)
 
 class ReportPlan(BaseModel):
-    title: str
+    title: str = Field(max_length=150)
     sections: list[SectionPlan] = Field(min_length=3, max_length=6)
+
+class ExtractedClaim(BaseModel):
+    """A new claim or a merge into an existing one."""
+    statement: str = Field(max_length=150)
+    source_doc_ids: list[str] = Field(min_length=1)
+    confidence: Literal["high", "medium", "low"]
+    merges_into: str | None = Field(
+        default=None,
+        description="Existing claim id (e.g. 'c_5918d72d') if this restates that claim. Null for new claims.",
+    )
+
+def merge_claims_by_id(existing: list["Claim"], updates: list["Claim"]) -> list["Claim"]:
+    """Reducer for `claims`: an update with a matching id REPLACES the existing
+    entry — used so extract_claims can fold new sources into a claim across loops.
+    New ids are appended. Preserves insertion order."""
+    by_id: dict[str, "Claim"] = {c.id: c for c in existing}
+    for c in updates:
+        by_id[c.id] = c
+    return list(by_id.values())
 
 
 class WrittenSection(BaseModel):
@@ -130,15 +170,16 @@ class WrittenSection(BaseModel):
 
 
 class ReflectionResult(BaseModel):
+    loop: int
     current_understanding: str = Field(
         description=(
-            "2-5 sentences summarizing what the claims have established so far."
+            "Few sentences summarizing what the claims have established so far."
             "Be specific about concrete findings, not vague"
         ),
-        max_length=400
+        max_length=800 # kept trunctating at 400
     )
+    knowledge_gap: str = Field(description="What's still missing look, 2-3 sentences", max_length=600)
     is_sufficient: bool
-    knowledge_gap: str = Field(description="What's still missing, 2-3 sentences", max_length=400)
     follow_up_queries: list[Query] = Field(default_factory=list, max_length=4)
 
 
@@ -151,12 +192,15 @@ class OverallState(TypedDict):
 
     # ---- Accumulated across the run (parallel-safe via reducers) ----
     search_queries: Annotated[list[Query], operator.add]
+    searched_queries_ids: Annotated[list[str], operator.add]
     search_hits: list[SearchHit]
     hits_to_scrape: list[SearchHit] # overwrite per loop 
     raw_docs: Annotated[list[Document], operator.add]
     doc_summaries: Annotated[list[DocSummary], operator.add]
-    claims: Annotated[list[Claim], operator.add]
-    understanding_history: Annotated[list[str], operator.add] 
+    understanding_history: Annotated[list[str], operator.add]
+    claims: Annotated[list[Claim], merge_claims_by_id]
+    reflection_history: Annotated[list[ReflectionResult], operator.add]
+    reflected_doc_ids: Annotated[list[str], operator.add]
     seen_urls: Annotated[list[str], operator.add]
     written_sections: Annotated[list[WrittenSection], operator.add]
 

@@ -111,90 +111,10 @@ async def search_queries_seq(state: OverallState) -> dict:
         "seen_urls": [h.url for h in new_hits],
     }
 
-TRIAGE_CHUNK = 6
-
-async def _triage_chunk(question: str, chunk: list[SearchHit]) -> set[str]:
-    hits_json = json.dumps([
-        {"id": h.id, "title": h.title, "url": h.url, "snippet": h.snippet}
-        for h in chunk
-    ])
-    structured = get_clients().struct_cheap_llm(ScrapeDecision)
-    try:
-        decision: ScrapeDecision = await structured.ainvoke([
-            {"role": "user", "content": PRE_SCRAPE_PROMPT.format(question=question, hits_json=hits_json)},
-        ])
-        valid = {h.id for h in chunk}
-        return {v.id for v in decision.verdicts if v.keep and v.id in valid}
-    except Exception as e:
-        logger.warning(f"triage chunk failed, keeping none: {e}")
-        return set()
-
-class ScrapeDecision(BaseModel):
-    verdicts: list[HitVerdict] = Field(min_length=1, max_length=50)
-#========================================================
-#Pre-scrape sort
-#========================================================
-PRE_SCRAPE_PROMPT = """You are triaging search results before scraping. Scraping is expensive — be STRICT.
-
-Research question: {question}
-
-You will receive search hits (id, title, URL, snippet). Judge EVERY hit individually from its title and snippet alone and return a verdict for each.
-
-Default to keep=false. Set keep=true ONLY if the title or snippet names something SPECIFIC to the research question — \
-a relevant person, place, event, date, or clearly on-topic discussion. A hit that merely shares a common word with the \
-question ("role", "fall", "cause", "long", "key") in an unrelated context is NOT relevant.
-
-Always drop (keep=false):
-- Dictionary, thesaurus, grammar, or vocabulary pages ("Definition of…", "100 Words to Use Instead of…", Wiktionary).
-- Software/technical documentation unrelated to the question (Azure roles, SQL Server, API docs) — unless the question is about that software.
-- Medical/health pages unless the question is medical.
-- OS or product help pages ("How to get help in Windows").
-- Generic hub/category pages, vendor landing pages, SEO listicles.
-- Video, forum, or Q&A links unless the snippet clearly shows substantive on-topic content.
-
-When unsure, drop it. There are plenty of hits; a wasted scrape costs more than a missed marginal page.
-
-Hits:
-{hits_json}
-"""
-
-async def pre_scrape(state: OverallState) -> dict:
-    task_id = state["task_id"]
-    hits: list[SearchHit] = state.get("search_hits", [])
-    if not hits:
-        return {"hits_to_scrape": []}
-
-    _emit(task_id, "stage", stage="triaging",
-          message=f"Triaging {len(hits)} hits before scrape")
-
-    MAX_SCRAPE = 20  # ceiling guard against pathological over-keeping
-    try:
-        chunks = [hits[i:i + TRIAGE_CHUNK] for i in range(0, len(hits), TRIAGE_CHUNK)]
-        results = await asyncio.gather(*[
-            _triage_chunk(state["original_query"], chunk) for chunk in chunks
-        ])
-        keep_ids = set().union(*results) if results else set()
-        kept = [h for h in hits if h.id in keep_ids]
-
-        if len(kept) > MAX_SCRAPE:
-            kept = sorted(kept, key=lambda h: h.search_score, reverse=True)[:MAX_SCRAPE]
-
-        logger.info(f"pre_scrape: {len(hits)} hits → {len(kept)} kept across {len(chunks)} chunks")
-        _emit(task_id, "triage_complete", before=len(hits), after=len(kept))
-      
-        if len(kept) > MAX_SCRAPE:
-            kept = sorted(kept, key=lambda h: h.search_score, reverse=True)[:MAX_SCRAPE]
-    except Exception as e:
-        logger.exception(f"pre_scrape failed, falling back to top-N by score: {e}")
-        kept = sorted(hits, key=lambda h: h.search_score, reverse=True)[:MAX_SCRAPE]
-
-    logger.info(f"pre_scrape: {len(hits)} hits → {len(kept)} kept")
-    _emit(task_id, "triage_complete", before=len(hits), after=len(kept))
-    return {"hits_to_scrape": kept}
 
 async def scrape_node(state: OverallState) -> dict:
     task_id = state["task_id"]
-    hits = state.get("hits_to_scrape", [])
+    hits = state.get("search_hits", [])
     if not hits:
         return {"raw_docs": []}
 

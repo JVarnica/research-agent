@@ -18,7 +18,7 @@ from .task import worker_loop
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-
+NUM_WORKERS = 3 
 REDIS_URL = os.environ["REDIS_URL"]
 SEARCH_TIMEOUT = float(os.environ.get("SEARCH_TIMEOUT", "20.0"))
 
@@ -72,9 +72,11 @@ async def lifespan(app: FastAPI):
         state.graph = build_graph(checkpointer=checkpointer)
         logger.info("Graph compiled")
         
-        state.worker_task = asyncio.create_task(
-            worker_loop(state.redis, state.graph),
-            name="research_worker",)
+        state.worker_tasks = [
+            asyncio.create_task(worker_loop(state.redis, state.graph),
+            name="research_worker_{i}",)
+            for i in range(NUM_WORKERS)
+        ]
         app.state.deps = state
         
         try:
@@ -82,12 +84,15 @@ async def lifespan(app: FastAPI):
         finally:
             # --- Shutdown ---
             logger.info("Shutting down")
-            state.worker_task.cancel()
             try:
-                await asyncio.wait_for(state.worker_task, timeout=10.0)
-            except (asyncio.TimeoutError, asyncio.CancelledError):
-                logger.warning("Worker task timed out")
-                pass
+                for t in state.worker_tasks:
+                    t.cancel()
+                await asyncio.wait_for(
+                    asyncio.gather(*state.worker_tasks, return_exceptions=True),
+                    timeout=10.0,
+                )
+            except asyncio.TimeoutError:
+                logger.warning("Workers did not shut down within 10s, forcing exit")
             try:
                 await state.search_http.aclose()
             except Exception as e:

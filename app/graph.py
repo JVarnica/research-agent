@@ -10,7 +10,7 @@ from .nodes import (
     reflect, reflect_router,
     plan_report,
     fan_out_sections, write_section,
-    stitch_report, pre_scrape, scrape_node
+    stitch_report, scrape_node
 )
 
 
@@ -19,8 +19,7 @@ def build_graph(checkpointer=None):
     
     # ---- Nodes ----
     g.add_node("generate_queries", generate_queries)
-    g.add_node("search_all_queries", search_queries_seq)
-    g.add_node("pre_scrape", pre_scrape)     
+    g.add_node("search_all_queries", search_queries_seq)    
     g.add_node("scrape_node", scrape_node)   
     g.add_node("summarize_one_doc", summarize_one_doc)      # parallel target
     g.add_node("extract_claims", extract_claims)
@@ -36,10 +35,7 @@ def build_graph(checkpointer=None):
     g.add_edge("generate_queries", "search_all_queries")
 
     # Pre-scrape filter for good url
-    g.add_edge("search_all_queries", "pre_scrape")
-
-    # now scraping good url
-    g.add_edge("pre_scrape", "scrape_node")
+    g.add_edge("search_all_queries", "scrape_node")
     
     # After all search branches finish, fan out to summarize
     g.add_conditional_edges("scrape_node", fan_out_summarize, ["summarize_one_doc", "extract_claims"])

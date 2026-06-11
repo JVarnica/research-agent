@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 from typing import Iterable, Optional
 import httpx
 import trafilatura
-from .state import Document, Query, SearchHit
+from .state import Document, Query
 
 logger = logging.getLogger(__name__)
 
@@ -63,23 +63,23 @@ async def search_query(
     query: Query,
     seen_urls: set[str],
     max_results: int,
-) -> list[SearchHit]:
+) -> list[Document]:
     """Searxng only — no scraping. Returns hit metadata for the
     pre_scrape node to triage."""
     hits = await search_searxng(query.query, categories=query.category, max_results=max_results)
 
-    out: list[SearchHit] = []
+    out: list[Document] = []
     for h in hits:
         url = h.get("url")
         if not url or url in seen_urls:
             continue
         if not _is_scrapeable(url):
             continue
-        out.append(SearchHit(
+        out.append(Document(
             id=_doc_id(url),
             url=url,
             title=(h.get("title") or ""),
-            snippet=(h.get("content") or "")[:500],
+            snippet=(h.get("content") or ""), # searxng content
             source_query_id=query.id,
             search_score=float(h.get("score", 0.0)),
             category=query.category,
@@ -109,7 +109,7 @@ async def _scrape_one(
             logger.warning(f"scrape failed for {url}: {e}")
             return None
 
-async def scrape_hits(hits: list[SearchHit]) -> list[Document]:
+async def scrape_hits(hits: list[Document]) -> list[Document]:
     """Fetch + extract for an already-filtered hit list."""
     sem = asyncio.Semaphore(SCRAPE_CONCURRENCY)
     tasks = [_scrape_one(h.url, sem) for h in hits]
@@ -123,7 +123,7 @@ async def scrape_hits(hits: list[SearchHit]) -> list[Document]:
             id=hit.id,
             url=hit.url,
             title=hit.title,
-            raw_content=content,
+            snippet=content,
             source_query_id=hit.source_query_id,
             search_score=hit.search_score,
         ))

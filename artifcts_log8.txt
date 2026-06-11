@@ -1,0 +1,586 @@
+{
+  "doc_summaries": [
+    {
+      "doc_id": "b4d745ff94ed",
+      "title": "Empire and development: the fall of the Roman west - History & Policy",
+      "url": "https://historyandpolicy.org/policy-papers/papers/empire-and-development-the-fall-of-the-roman-west/",
+      "relevant": true,
+      "overview": "A policy paper examining the economic and political factors behind the fall of the Western Roman Empire, challenging traditional narratives by integrating archaeological evidence and revisiting historical assumptions about late-Roman decline.",
+      "key_findings": [
+        "The Roman Empire experienced a peak in agricultural activity during the fourth century, marked by the highest number of settlements recorded in the entire Roman period, contradicting earlier beliefs of economic collapse.",
+        "Hyperinflation in the third century was driven by the need to mint more coins to fund an expanding military, not by general economic decline or loss of value in precious metals.",
+        "The rise of the Sassanian Dynasty in Persia created an external threat that significantly influenced Roman political instability, particularly through military campaigns and resource demands.",
+        "Late-Roman society maintained substantial economic vitality, suggesting that political crises in the fifth century may not have been rooted in prior economic collapse."
+      ],
+      "quotes": [
+        "The entire vision of late-Roman economic collapse was based... on a limited body of evidence.",
+        "Most late-Roman peasants built in much less durable materials... this kind of fossil Roman landscape was impossible to find elsewhere.",
+        "Third-century Roman inflation was limited to prices measured in silver coins... none of which lost its value.",
+        "The Persian threat was eventually countered by the end of the third century... but it took fifty years or so of military and fiscal adjustment."
+      ]
+    },
+    {
+      "doc_id": "3c048f1fad15",
+      "title": "Historical sources on the fall of the Western Roman Empire",
+      "url": "https://www.historyskills.com/finding-sources/ancient-history/fall-of-rome-sources/",
+      "relevant": true,
+      "overview": "This document presents historical sources, primarily from Ammianus Marcellinus and the Anonymus Valesianus, detailing the causes and events leading to the fall of the Western Roman Empire, including invasions, political instability, and the deposition of the last emperor.",
+      "key_findings": [
+        "The Western Roman Empire collapsed in 476 AD due to external invasions, internal instability, and political fragmentation.",
+        "Ammianus Marcellinus recorded the Gothic request to cross the Danube in 376 AD and the subsequent catastrophic defeat at Adrianople in 378 AD.",
+        "Romulus Augustulus, the last emperor of the Western Roman Empire, was deposed by Odoacer in 476 AD.",
+        "The Anonymus Valesianus noted that the exact year of the fall of the Western Empire is uncertain, though 476 AD is commonly accepted."
+      ],
+      "quotes": [
+        "From the late fourth century through to the later fifth century, the Western Roman Empire faced mounting pressure from external invasion, internal instability, and political fragmentation, which together led to its eventual collapse in 476 AD.",
+        "And while arms and missiles of all kinds were meeting in fierce conflict... our men began to retreat;",
+        "Then the two lines of battle dashed against each other, like the rams of ships...",
+        "The decline of Rome was the natural and unavoidable effect of excessive greatness."
+      ]
+    },
+    {
+      "doc_id": "31da23a4928d",
+      "title": "8 Reasons Why Rome Fell: The Fall of Rome Explained - History.com",
+      "url": "https://www.history.com/articles/8-reasons-why-rome-fell",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "800c214beaf0",
+      "title": "Ancient History in depth: The Fall of Rome - BBC",
+      "url": "https://www.bbc.co.uk/history/ancient/romans/fallofrome_article_01.shtml",
+      "relevant": true,
+      "overview": "An article by Dr. Peter Heather explores whether the fall of the Western Roman Empire was a sudden collapse or a slow transformation, emphasizing the role of migration and violence in dismantling the empire.",
+      "key_findings": [
+        "The Western Roman Empire ended in 476 AD when Romulus Augustulus was deposed by Odovacar, a Germanic prince.",
+        "Migration played a crucial role in the fall, with groups like the Goths, Vandals, and Anglo-Saxons seizing control of territories.",
+        "The central Roman state collapsed due to migrants stripping it of its tax base, which funded its armies.",
+        "Local Roman society in regions like Britain and northern Gaul disappeared, while others adapted by negotiating with migrants."
+      ],
+      "quotes": [
+        "In September 476 AD, the last Roman emperor of the west, Romulus Augustulus, was deposed by a Germanic prince called Odovacar.",
+        "The central Roman state collapsed because the migrants forcibly stripped it of the tax base which it had used to fund its armies.",
+        "As late as 383 AD, captive barbarians were being fed to wild animals in the Colosseum.",
+        "Even where other less important Roman institutions survived, the new kings had only much-diminished revenue rights and their armies were composed of semi-professional contingents of local landowners."
+      ]
+    },
+    {
+      "doc_id": "d43c493564de",
+      "title": "The Financial Crisis, Then and Now: Ancient Rome and 2008 CE",
+      "url": "https://epicenter.wcfia.harvard.edu/blog/financial-crisis-then-and-now",
+      "relevant": true,
+      "overview": "An analysis comparing the 2008 financial crisis with an ancient Roman economic crisis, focusing on legislative actions, credit markets, and policy responses.",
+      "key_findings": [
+        "In 33 CE, a revived law required creditors to invest a portion of their capital in Italian land, sparking a credit crunch due to the sudden demand for land.",
+        "Tiberius, the Roman emperor, responded to the crisis by distributing 100 million sestertii in interest-free loans to stabilize the economy.",
+        "The senatorial decree forcing creditors to invest two-thirds of their capital in Italian land inadvertently caused a drop in land prices and a shortage of credit.",
+        "The law, originally enacted around 40 BCE by Julius Caesar, aimed to curb usury but fell into disuse until 33 CE."
+      ],
+      "quotes": [
+        "The rush by creditors to buy land sparked a credit crunch.",
+        "He distributed 100 million sestertii to specially chartered banks in order to make available three-year, interest-free loans.",
+        "The senatorial decree had made matters worse. It was intended to prop up land values, but because it forced many to sell their properties, prices dropped.",
+        "Every one of the 600 senators was in personal violation of this law, and they sought Tiberius’s indulgence."
+      ]
+    },
+    {
+      "doc_id": "5f8d754f61db",
+      "title": "Crisis of the Roman Republic - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Crisis_of_the_Roman_Republic",
+      "relevant": true,
+      "overview": "A Wikipedia article discussing the Crisis of the Roman Republic, focusing on political instability, social unrest, and the eventual transition from the Republic to the Empire.",
+      "key_findings": [
+        "The Crisis of the Roman Republic spanned from approximately 133 BC to 30 BC, marked by political instability and social unrest.",
+        "Political violence became a tool for resolving conflicts, undermining the traditional republican norms and leading to the erosion of constitutional principles.",
+        "The tribunate of Tiberius Gracchus in 133 BC challenged the power of the aristocracy through land reform, prompting a backlash that resulted in his assassination.",
+        "Gaius Marius's consecutive consulships from 100 BC onwards weakened the norms-based constitution, contributing to the destabilization of the Republic."
+      ],
+      "quotes": [
+        "The crisis of the Roman Republic was an extended period of political instability and social unrest from about c. 133 BC to 30 BC that culminated in the demise of the Roman Republic and the advent of the Roman Empire.",
+        "The political violence also further divided citizens with different political views and set a precedent that senators—even those without lawful executive authority—could use force to silence citizens merely for holding certain political beliefs.",
+        "Gracchus' legislation would challenge the socio-political power of the old aristocracy, along with eroding their economic interests.",
+        "Marius had been consul consecutively for some years by this point, owing to the immediacy of the Cimbrian War."
+      ]
+    },
+    {
+      "doc_id": "aff7904ec8f8",
+      "title": "Economic Reasons for the fall of Roman Empire",
+      "url": "https://ignited.in/index.php/jasrae/article/download/7700/15200/37976?inline=1",
+      "relevant": true,
+      "overview": "This document presents an analysis of the economic factors contributing to the fall of the Roman Empire, focusing on monetary instability, de-specialization, and the shift from a productive to a stagnant economy.",
+      "key_findings": [
+        "By the third century A.D., the Roman Empire experienced a significant monetary crisis marked by deteriorating coin quality and increased maritime wreckage in the Mediterranean, indicating a breakdown in trade networks.",
+        "The Roman government's fiscal policies shifted from supporting growth to becoming increasingly costly, leading to economic rot and eventual collapse.",
+        "During the High Empire (27 B.C.–180 A.D.), stable property rights, legal systems, and taxation supported economic development, while later periods saw the erosion of these foundations.",
+        "A tax rate between 0.01 and 0.03 was levied primarily on the wealthy during the High Empire, fostering investment in public works and trade."
+      ],
+      "quotes": [
+        "Proof of this emergency originates from significant monetary signs, for example, the fineness of coins and the quantity of wrecks in the Mediterranean Sea...",
+        "If costs are steady and robbery, extortion, and savagery are not worries, there is a great domain for maintainable development.",
+        "The advantages of government during Pax Romana exceeded the expenses.",
+        "These powers made rare assets be uneconomically designated."
+      ]
+    },
+    {
+      "doc_id": "f95c3f7579de",
+      "title": "The Fall of Rome: What was it? Why did it happen? - Peter Turchin",
+      "url": "https://peterturchin.com/fall-rome-happen/",
+      "relevant": true,
+      "overview": "This blog post explores the multifac (complex) causes behind the decline of the Roman Empire, emphasizing dynamic patterns rather than a simple 'fall.' It introduces the structural-demographic theory as a framework for understanding political instability and societal collapse.",
+      "key_findings": [
+        "The Roman Empire reached its peak under the 'five good emperors,' with indicators like territorial extent, population, and economic activity showing sustained growth until 180 CE.",
+        "After 180 CE, most quantitative measures of imperial strength declined, including social and political stability, indicating a shift toward instability.",
+        "Political instability occurred in waves, with peaks every ~50 years, challenging the traditional narrative of a singular 'collapse' of Rome.",
+        "Structural-demographic theory posits that elite overproduction, elite competition, popular immiseration, and fiscal failure are key drivers of political instability."
+      ],
+      "quotes": [
+        "There are many theories of why Rome fell. A German historian, Alexander Demandt, counted more than 220 explanations...",
+        "After the death of the last 'good emperor' in 180 all these indicators headed south.",
+        "Most of the fourth century was relatively peaceful, but then the western half really disintegrated.",
+        "Growing political instability is first and foremost a result of elite overproduction leading to excessive intra-elite competition and conflict."
+      ]
+    },
+    {
+      "doc_id": "9b759bcd04b7",
+      "title": "The Post-Roman West | Oxford Centre for Late Antiquity",
+      "url": "https://www.ocla.ox.ac.uk/the-post-roman-west",
+      "relevant": true,
+      "overview": "An academic overview of the post-Roman West, focusing on political, cultural, and societal transformations following the collapse of the Western Roman Empire in the fifth century. The document presents current scholarly debates about continuity versus rupture in the region.",
+      "key_findings": [
+        "By AD 500, the Western Roman Empire had collapsed into multiple Germanic kingdoms ruled by non-Roman elites.",
+        "In Britain, the transformation was marked and seemingly abrupt, affecting social structure, economy, religion, and language.",
+        "Ostrogothic rulers in Italy maintained a 'studied air of Romanness' and collaborated with local aristocracies.",
+        "Christianity and the Church remained remarkably durable through the post-Roman era, spreading beyond former Roman frontiers."
+      ],
+      "quotes": [
+        "These peoples set up their own states, ruled by their own kings.",
+        "In some areas, Britain in particular, change was marked, and apparently sudden (in social structure, the economy, religion, even language);",
+        "The Ostrogothic kings of Italy, for instance, ruled the peninsula with the help of the local aristocracy, and cultivated a studied air of Romanness, that was sometimes more Roman than that of the Romans themselves.",
+        "During this period Christianity indeed began to spread northwards and eastwards, creating a new Europe beyond Rome’s frontiers."
+      ]
+    },
+    {
+      "doc_id": "46760f4feb6c",
+      "title": "History of Decline and Fall of the Mighty Roman Empire",
+      "url": "https://www.stefanorometours.com/blog/docs/history-of-decline-and-fall-of-roman-empire/",
+      "relevant": true,
+      "overview": "A travel blog article discussing the decline and fall of the Roman Empire, framed through a touristic lens. It outlines key historical periods and events contributing to the empire’s collapse, emphasizing both internal and external factors.",
+      "key_findings": [
+        "The Crisis of the Third Century (235–284 CE) was marked by political instability, frequent emperor assassinations, and military fragmentation, which severely weakened the empire.",
+        "The sacking of Rome by the Visigoths in 410 CE, led by Alaric, marked the first time in over 800 years that the city fell to an external force.",
+        "The Vandals sacked Rome again in 455 CE under King Genseric, causing extensive damage and symbolizing the empire's diminishing power.",
+        "Barbarian invasions, driven by groups like the Huns, pressured the Roman Empire, exposing weaknesses in its military and border defenses."
+      ],
+      "quotes": [
+        "Where once-grand marble palaces adorned the landscape, now meager huts of delicate wood and humble thatch roofs sheltered the populace.",
+        "The Crisis of the Third Century... marked by a series of unprecedented challenges and upheavals.",
+        "The Visigoths, under the leadership of Alaric... successfully sacked the city of Rome.",
+        "The Vandals... looted the city, leaving destruction in their wake."
+      ]
+    },
+    {
+      "doc_id": "3baca1201f98",
+      "title": "The Roman Empire: A Brief History | Milwaukee Public Museum",
+      "url": "https://www.mpm.edu/research-collections/anthropology/anthropology-collections-research/mediterranean-oil-lamps/roman-empire-brief-history",
+      "relevant": true,
+      "overview": "A concise historical overview of the Roman Empire, tracing its origins, major periods, and eventual fall, with emphasis on cultural integration and political evolution.",
+      "key_findings": [
+        "The Roman Empire existed from 625 BC to AD 476, encompassing multiple phases including the Kingdom, Republic, and Empire.",
+        "Julius Caesar rose to power in 60 BC and expanded Rome's borders beyond the Mediterranean by conquering Celtic Gaul in 51 BC.",
+        "The Western Roman Empire fell in AD 476 due to repeated Gothic invasions and internal instability.",
+        "The Eastern Roman Empire, later known as the Byzantine Empire, survived until AD 1453 when Constantinople fell to the Ottoman Turks."
+      ],
+      "quotes": [
+        "From its founding in 625 BC to its fall in AD 476, the Roman Empire conquered and integrated dozens of cultures.",
+        "Rome was founded around 625 BC in the areas of ancient Italy known as Etruria and Latium.",
+        "The Western Roman Empire came to an end in AD 476 when the western empire suffered several Gothic invasions.",
+        "It fell when Turks took control of its capital city, Constantinople (modern day Istanbul in Turkey) in AD 1453."
+      ]
+    },
+    {
+      "doc_id": "54706bc3b48e",
+      "title": "Rome's Economic Collapse: A Lesson in Deficit Spending and ...",
+      "url": "https://cmi-capital.com/blog/romes-economic-collapse-a-lesson-in-deficit-spending-and-over-government/",
+      "relevant": true,
+      "overview": "A modern economic analysis framing the fall of the Roman Empire as a result of unchecked deficit spending, excessive government growth, and currency manipulation. The document draws parallels between ancient Rome and contemporary fiscal challenges.",
+      "key_findings": [
+        "Emperors manipulated coinage by reducing the precious metal content starting with the Antoninianus under Caracalla, leading to inflation and loss of public confidence.",
+        "Deficit spending and the expansion of the administrative state under Augustus centralized tax collection and created a bureaucratic system that increased the cost of governance.",
+        "The debasement of the Denarius from pure silver to copper-based coins marked a shift from intrinsic to fiduciary money, undermining economic stability.",
+        "The combination of inflation, taxation, and administrative bloat reduced private investment and led to the transition from a monetized to a natural economy."
+      ],
+      "quotes": [
+        "Faced with a shortfall in revenue, emperors chose to debase the currency by reducing the precious metal content of coins while keeping the face value the same.",
+        "The Antoninianus, introduced by Caracalla, is seen as a key example of debasement. Initially considered a double Denarius, its silver content was repeatedly reduced...",
+        "The growth of the administrative state, while initially intended to correct the problems of the Republic’s decentralized system, became a costly endeavor that added to the Empire’s financial strain.",
+        "The debas1ment of the currency, combined with other factors, led to the transition from a monetized economy to a 'natural economy', where goods were exchanged directly rather than through currency."
+      ]
+    },
+    {
+      "doc_id": "7cadacc326db",
+      "title": "Fall of the Western Roman Empire - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Fall_of_the_Western_Roman_Empire",
+      "relevant": true,
+      "overview": "An overview of the fall of the Western Roman Empire, focusing on the causes, timeline, and scholarly debates surrounding its collapse.",
+      "key_findings": [
+        "In 376, a large migration of Goths and other non-Roman people, fleeing from the Huns, entered the Empire, marking a turning point in the Empire’s vulnerability.",
+        "By 476, the position of Western Roman Emperor wielded negligible military, political, or financial power, leading to the deposition of Romulus Augustulus by Odoacer.",
+        "The Crisis of the Third Century (approximately 235–284 CE) involved natural climate change, pandemics, and political instability, nearly causing the collapse of the imperial system.",
+        "The Antonine Plague, which ended a long period of demographic and economic expansion, weakened the empire without toppling it."
+      ],
+      "quotes": [
+        "In 376, a large migration of Goths and other non-Roman people, fleeing from the Huns, entered the Empire.",
+        "By 476, the position of Western Roman Emperor wielded negligible military, political, or financial power, and had no effective control over the scattered Western domains that could still be described as Roman.",
+        "The Crisis of the Third Century, in which natural climate change, renewed pandemic disease, and internal and external political instability led to the near-collapse of the imperial system.",
+        "The Antonine Plague that ended a long period of demographic and economic expansion, weakening but not toppling the empire."
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "id": "c_b1eb3d07",
+      "statement": "Western Roman Empire fell in 476 AD due to invasions, internal instability, and political fragmentation",
+      "source_doc_ids": [
+        "3c048f1fad15",
+        "800c214beaf0",
+        "3baca1201f98"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "c_9fac999d",
+      "statement": "Hyperinflation in 3rd century was due to military funding, not general economic decline",
+      "source_doc_ids": [
+        "b4d745ff94ed"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_4a0e2029",
+      "statement": "Sassanian Dynasty's rise threatened Roman stability",
+      "source_doc_ids": [
+        "b4d745ff94ed"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_5caa0b3d",
+      "statement": "Late-Roman society remained economically vibrant",
+      "source_doc_ids": [
+        "b4d745ff94ed"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_ad42e7a0",
+      "statement": "Goths and other migrants seized Roman territories",
+      "source_doc_ids": [
+        "800c214beaf0"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_99b9e104",
+      "statement": "Migration stripped Roman state of tax base",
+      "source_doc_ids": [
+        "800c214beaf0"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_38db6687",
+      "statement": "Roman economy collapsed due to monetary crisis and fiscal policies",
+      "source_doc_ids": [
+        "aff7904ec8f8",
+        "54706bc3b48e"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "c_c3a77e32",
+      "statement": "Roman Empire experienced monetary crisis in 3rd century",
+      "source_doc_ids": [
+        "aff7904ec8f8"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_3aadc154",
+      "statement": "Roman Empire's monetary system shifted from intrinsic to fiduciary money",
+      "source_doc_ids": [
+        "54706bc3b48e"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_cf9194b0",
+      "statement": "Roman Empire's decline began after 180 CE",
+      "source_doc_ids": [
+        "f95c3f7579de"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_9d5ff66c",
+      "statement": "Post-Roman West transformed into Germanic kingdoms",
+      "source_doc_ids": [
+        "9b759bcd04b7"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_fd844691",
+      "statement": "Visigoths sacked Rome in 410 CE",
+      "source_doc_ids": [
+        "46760f4feb6c"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_12a3f359",
+      "statement": "Vandals sacked Rome in 455 CE",
+      "source_doc_ids": [
+        "46760f4feb6c"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_784e7643",
+      "statement": "Crisis of the Third Century (235–284 CE) weakened the empire",
+      "source_doc_ids": [
+        "7cadacc326db"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_46048bdc",
+      "statement": "Antonine Plague weakened the empire",
+      "source_doc_ids": [
+        "7cadacc326db"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_d1c02e41",
+      "statement": "Roman Empire's economy shifted from monetized to natural economy",
+      "source_doc_ids": [
+        "54706bc3b48e"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_4be6c434",
+      "statement": "Roman Empire's coinage was debased under Caracalla",
+      "source_doc_ids": [
+        "54706bc3b48e"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_64de4bd5",
+      "statement": "Roman Empire's administrative state increased governance costs",
+      "source_doc_ids": [
+        "54706bc3b48e"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_c931f002",
+      "statement": "Roman Empire's tax system supported economic development",
+      "source_doc_ids": [
+        "aff7904ec8f8"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_6d6edef4",
+      "statement": "Roman Empire's tax rate on wealthy was 0.01–0.03",
+      "source_doc_ids": [
+        "aff7904ec8f8"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_c459af8f",
+      "statement": "Roman Empire's economic growth peaked under 'five good emperors'",
+      "source_doc_ids": [
+        "f95c3f7579de"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_702d9d62",
+      "statement": "Roman Empire's political instability occurred in waves",
+      "source_doc_ids": [
+        "f95c3f7579de"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_99463a8f",
+      "statement": "Roman Empire's elite overproduction and competition caused instability",
+      "source_doc_ids": [
+        "f95c3f7579de"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_aec160ff",
+      "statement": "Roman Empire's fiscal policies shifted from growth to costliness",
+      "source_doc_ids": [
+        "aff7904ec8f8"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_f54f5035",
+      "statement": "Roman Empire's monetary crisis began in 3rd century",
+      "source_doc_ids": [
+        "aff7904ec8f8"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_b39f8a71",
+      "statement": "Roman Empire's coin quality deteriorated in 3rd century",
+      "source_doc_ids": [
+        "aff7904ec8f8"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_bf485501",
+      "statement": "Roman Empire's trade networks broke down in 3rd century",
+      "source_doc_ids": [
+        "aff7904ec8f8"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_7c5b4a9e",
+      "statement": "Roman Empire's legal systems and property rights eroded",
+      "source_doc_ids": [
+        "aff7904ec8f8"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_a41b99b8",
+      "statement": "Roman Empire's migration led to loss of tax base",
+      "source_doc_ids": [
+        "800c214beaf0"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_15365e92",
+      "statement": "Roman Empire's central state collapsed due to migrants",
+      "source_doc_ids": [
+        "800c214beaf0"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_515ef648",
+      "statement": "Roman Empire's local society disappeared in Britain and Gaul",
+      "source_doc_ids": [
+        "9b759bcd04b7"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_728e8691",
+      "statement": "Roman Empire's Ostrogothic rulers maintained 'studied air of Romanness'",
+      "source_doc_ids": [
+        "9b759bcd04b7"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_b50227e3",
+      "statement": "Roman Empire's Christianity and Church remained durable",
+      "source_doc_ids": [
+        "9b759bcd04b7"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_f115f9de",
+      "statement": "Roman Empire's economy transitioned from monetized to natural economy",
+      "source_doc_ids": [
+        "54706bc3b48e"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_81c18339",
+      "statement": "Roman Empire's coinage was manipulated by emperors",
+      "source_doc_ids": [
+        "54706bc3b48e"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_959ca490",
+      "statement": "Roman Empire's administrative state increased costs",
+      "source_doc_ids": [
+        "54706bc3b48e"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_b39a1b49",
+      "statement": "Roman Empire's economic development was supported by tax system",
+      "source_doc_ids": [
+        "aff7904ec8f8"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_eebb5dd0",
+      "statement": "Roman Empire's tax system supported investment in public works",
+      "source_doc_ids": [
+        "aff7904ec8f8"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_39d12957",
+      "statement": "Roman Empire's credit markets were affected by land investment laws",
+      "source_doc_ids": [
+        "d43c493564de"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "id": "c_cbcb4765",
+      "statement": "Roman Empire's credit crunch occurred in 33 CE",
+      "source_doc_ids": [
+        "d43c493564de"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "search_queries": [
+    {
+      "id": "q_e6d2f0d3",
+      "query": "What were the key economic factors that contributed to the fall of the Roman Empire?",
+      "rationale": "This query investigates the economic decline as a central factor in the empire's collapse.",
+      "category": "general"
+    },
+    {
+      "id": "q_f228ffeb",
+      "query": "What role did internal political instability play in the fall of the Roman Empire?",
+      "rationale": "This query focuses on governance and leadership issues within the empire during its decline.",
+      "category": "general"
+    },
+    {
+      "id": "q_5f3312f7",
+      "query": "What historical sources describe the final years and collapse of the Western Roman Empire?",
+      "rationale": "This query seeks primary and secondary academic sources about the end of the Western Roman Empire.",
+      "category": "general"
+    }
+  ]
+}

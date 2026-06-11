@@ -44,7 +44,7 @@ class Document(BaseModel):
     id: str
     url: str
     title: str
-    raw_content: str
+    snippet: str
     source_query_id: str
     search_score: float = 0.0
 
@@ -57,6 +57,15 @@ class DocSummary(BaseModel):
     title: str
     url: str
     relevant: bool = Field(description="Does this doc actually help answer the question?")
+    overview: str = Field(
+        default="",
+        description=(
+            " 1-3 sentences: what this document covers, its angle, scope, or argument. "
+            "Helps the section writer use this source in context rather than as "
+            "disconnected facts. Empty string if not relevant."
+        ),
+        max_length = 400
+    )
     key_findings: list[str] = Field(
         description="3-8 specific findings, each stating a date, number, named person/place/event. No more than 3 sentences the finding. Empty list if not relevant.",
         max_length=8,
@@ -66,6 +75,14 @@ class DocSummary(BaseModel):
         max_length=4,
     )
 
+def merge_claims_by_id(existing: list["Claim"], updates: list["Claim"]) -> list["Claim"]:
+    """Reducer for `claims`: an update with a matching id REPLACES the existing
+    entry — used so extract_claims can fold new sources into a claim across loops.
+    New ids are appended. Preserves insertion order."""
+    by_id: dict[str, "Claim"] = {c.id: c for c in existing}
+    for c in updates:
+        by_id[c.id] = c
+    return list(by_id.values())
 
 class Claim(BaseModel):
     """A specific factual claim with provenance. Built by aggregating 
@@ -82,6 +99,10 @@ class Claim(BaseModel):
         max_length=150)
     source_doc_ids: list[str] = Field(min_length=1)
     confidence: Literal["high", "medium", "low"]
+    merges_into: str | None = Field(
+        default=None,
+        description="Existing claim id (e.g. 'c_5918d72d') if this restates that claim. Null for new claims.",
+    )
 
 
 class SectionPlan(BaseModel):
@@ -89,12 +110,14 @@ class SectionPlan(BaseModel):
     only gets these claims, nothing else."""
     id: str
     title: str
-    angle: str = Field(description="What this section argues or covers in 2-3 sentences", max_length=300)
+    angle: str = Field(
+        description="2 sentences about what this section covers. Not the content itself.", 
+        max_length=300)
     claim_ids: list[str] = Field(min_length=1)
 
 
 class ReportPlan(BaseModel):
-    title: str
+    title: str = Field(max_length=150)
     sections: list[SectionPlan] = Field(min_length=3, max_length=6)
 
 
@@ -113,7 +136,7 @@ class ReflectionResult(BaseModel):
             "2-5 sentences summarizing what the claims have established so far."
             "Be specific about concrete findings, not vague"
         ),
-        max_length=400
+        max_length=800 #kept truncating at 400
     )
     is_sufficient: bool
     knowledge_gap: str = Field(description="What's still missing, 2-3 sentences", max_length=400)
@@ -133,8 +156,10 @@ class OverallState(TypedDict):
     hits_to_scrape: list[Document] # overwrite per loop 
     raw_docs: Annotated[list[Document], operator.add] # scraped content
     doc_summaries: Annotated[list[DocSummary], operator.add]
-    claims: Annotated[list[Claim], operator.add]
+    claims: Annotated[list[Claim], merge_claims_by_id]
     understanding_history: Annotated[list[str], operator.add] 
+    reflection_history: Annotated[list[ReflectionResult], operator.add]
+    reflected_doc_ids: Annotated[list[str], operator.add]
     seen_urls: Annotated[list[str], operator.add]
     written_sections: Annotated[list[WrittenSection], operator.add]
 

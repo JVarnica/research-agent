@@ -9,8 +9,8 @@ from pydantic import BaseModel, Field
 
 from langgraph.types import Send
 from .state import (
-    HitVerdict, OverallState, Query, Document, DocSummary, Claim, SearchHit,
-    ReportPlan, SectionPlan, WrittenSection, ReflectionResult, ExtractedClaim,
+    OverallState, Query, Document, DocSummary, Claim, 
+    ReportPlan, SectionPlan, WrittenSection, ReflectionResult, 
 )
 from .llm import get_clients
 from .search import (
@@ -90,7 +90,7 @@ async def search_queries_seq(state: OverallState) -> dict:
     pending = [q for q in state["search_queries"] if q.id not in already]
 
     seen_urls: set[str] = set(state.get("seen_urls", []))
-    new_hits: list[SearchHit] = []
+    new_hits: list[Document] = []
     completed_queries_id: list[str] = []
 
     for query in pending:
@@ -116,6 +116,7 @@ async def scrape_node(state: OverallState) -> dict:
     task_id = state["task_id"]
     hits = state.get("search_hits", [])
     if not hits:
+        _emit(task_id, "scrape_complete", scraped=0)
         return {"raw_docs": []}
 
     _emit(task_id, "stage", stage="scraping",
@@ -175,7 +176,7 @@ async def summarize_one_doc(branch_input: dict) -> dict:
                 question=branch_input["original_query"],
                 title=doc.title,
                 url=doc.url,
-                content=doc.raw_content,
+                content=doc.snippet,
             )},
         ])
         # The schema lets the model leave doc_id/url unset; we own them
@@ -191,7 +192,7 @@ async def summarize_one_doc(branch_input: dict) -> dict:
         summary = DocSummary(doc_id=doc.id, url=doc.url, title=doc.title, relevant=False,
                              overview="", key_findings=[], quotes=[])
     
-    _emit(task_id, "doc_summarized", doc_title=summary.title, key_findings=summary.key_findings, relevant=summary.relevant)
+    _emit(task_id, "doc_summarized", doc_title=summary.title, overview=summary.overview, relevant=summary.relevant)
     return {"doc_summaries": [summary]}
 
 # ============================================================
@@ -254,7 +255,7 @@ NEW_SUMMARIES:
 
 
 class ClaimSet(BaseModel):
-    claims: list[ExtractedClaim] = Field(max_length=40)
+    claims: list[Claim] = Field(max_length=40)
 
 
 async def extract_claims(state: OverallState) -> dict:
@@ -270,7 +271,7 @@ async def extract_claims(state: OverallState) -> dict:
     loop = state.get("research_loop_count", 0)
     if not new_relevant:
 
-        _emit(task_id, "claims_extracted none", count=0, loop=loop)
+        _emit(task_id, "claims_extracted", count=0, loop=loop)
         return {"claims": []}
 
     existing_compact = [
@@ -324,9 +325,9 @@ async def extract_claims(state: OverallState) -> dict:
                 confidence=ec.confidence,
             ))
             new_count += 1
-
+    statements = [c.statement for c in out]
     logger.debug("claims: %d new, %d merged", new_count, merged_count)
-    _emit(task_id, "claims_extracted", count=new_count, merged=merged_count)
+    _emit(task_id, "claims_extracted", count=new_count, merged=merged_count, statements=statements)
     return {"claims": out}
 
 
@@ -357,10 +358,17 @@ Queries already searched (do not repeat or paraphrase these):
 
 Decide whether the evidence is sufficient to write a credible report.
 
+
 How to judge:
-- The claims index shows what's been touched. The evidence shows what's actually been learned. Judge from the evidence, not the claims.
-- Sufficient means the main question can be answered with concrete support. Not exhaustively — credibly.
-- A topic being broad is not a gap. A specific question the report cannot honestly answer IS a gap.
+- The claims index shows what topics have been touched. The evidence shows what's
+  actually been learned. Judge from the evidence, not the claims.
+- Sufficient means the main question can be answered with concrete support drawn
+  from the evidence. Not exhaustively — credibly.
+- A topic being broad is not a gap. A specific question the report cannot honestly
+  answer from the evidence IS a gap.
+- New evidence vs previous evidence: ask whether the new evidence resolves a gap
+  the previous loop identified, or whether it just adds variety on already-covered
+  ground.
 
 If the previous loop generated follow-up queries that returned no new evidence, that gap is unfillable from web search. Don't ask it again — proceed with sufficient=true and acknowledge the limitation in current_understanding.
 
@@ -402,7 +410,7 @@ async def reflect(state: OverallState) -> dict:
             is_sufficient=True,
             follow_up_queries=[],
         )
-        _emit(task_id, "reflection", loop=loop, sufficient=True)
+        _emit(task_id, "reflection", sufficient=is_sufficient, current_understanding=result.current_understanding, knowledge_gap=result.knowledge_gap)
         
         return {
         "is_sufficient": True,
@@ -489,7 +497,8 @@ async def reflect(state: OverallState) -> dict:
         logger.warning("reflect: all follow-ups were duplicates — forcing termination")
     is_sufficient = result.is_sufficient or not new_queries
 
-    _emit(task_id, "reflection", sufficient=is_sufficient, reflection=previous_reflections, knowledge_gap=result.knowledge_gap if loop == 0 else None)
+    _emit(task_id, "reflection", sufficient=is_sufficient, understanding=result.current_understanding, knowledge_gap=result.knowledge_gap,
+          new_queries=len(new_queries))
     
     return {
         "is_sufficient": is_sufficient,
@@ -544,8 +553,13 @@ Each section must:
 - Avoid overlap with other sections.
 - Contain claims whose mapped evidence is sufficient to support the angle.
 
-Order sections logically for the question, for example chronologically, causally, or from core mechanism to consequences."""
-
+Order sections logically for the question, for example chronologically, causally, or from core mechanism to consequences.
+ 
+This is a structural plan, NOT the report. Do not write any prose, summaries, or analysis in any field:
+- title: the report title, max 12 words
+- angle: ONE sentence naming what the section covers — no elaboration, no findings, no content
+- claim_ids: only the relevant claim ID strings
+The section writer fills in the actual content later; your job is structure only."""
 
 async def plan_report(state: OverallState) -> dict:
     task_id = state["task_id"]
@@ -565,7 +579,7 @@ async def plan_report(state: OverallState) -> dict:
          for s in state["doc_summaries"] if s.relevant],
         ensure_ascii=False,
     )
-    structured = get_clients().structured_llm(ReportPlan)
+    structured = get_clients().struct_cheap_llm(ReportPlan)
     
     plan: ReportPlan = await structured.ainvoke([
         {"role": "user", "content": PLAN_PROMPT.format(

@@ -1,0 +1,727 @@
+{
+  "doc_summaries": [
+    {
+      "doc_id": "05764f0a9d50",
+      "title": "When To Use Has Vs Have: Clear Rules And Examples",
+      "url": "https://englishgrammarzone.com/when-to-use-has-vs-have-rules-examples/",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "8dc70e81fd65",
+      "title": "Official website Park Güell | Barcelona | Web oficial Park Güell ...",
+      "url": "https://parkguell.barcelona/en",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "e8ded5cca0ba",
+      "title": "The demographic divide: inequalities in ageing across the European ...",
+      "url": "https://www.bruegel.org/policy-brief/demographic-divide-inequalities-ageing-across-european-union",
+      "relevant": true,
+      "overview": "A policy brief analyzing demographic trends in the EU, focusing on how different regions will experience population decline and ageing, and the implications for economic development and inequality.",
+      "key_findings": [
+        "By 2050, working-age populations are projected to decline in 22 out of 27 EU countries, with Eastern and Southern EU countries facing the sharpest declines due to natural population decrease and limited net migration.",
+        "Eastern and Southern EU countries will experience more severe ageing and workforce shrinkages, potentially increasing inequality, while Northern and Western countries will age more slowly due to higher migration.",
+        "Migration is crucial for sustaining populations in countries with natural population decline, with Eastern Europe experiencing significant net emigration after joining the EU in 2004.",
+        "The EU's goal of reducing inequality through upward convergence is at risk due to demographic shifts, which could deepen disparities between regions and countries."
+      ],
+      "quotes": [
+        "By 2050, working-age populations are projected to decline in 22 out of 27 EU countries.",
+        "Eastern and Southern EU countries will face more severe ageing and workforce shrinkages, undermining their competitiveness.",
+        "Between 2004 and 2009, approximately 1.8 percent of the population of the eight eastern countries that joined the EU in 2004 migrated to the 15 pre-2004 members.",
+        "The convergence of economic conditions and opportunities across regions and countries is considered vital for EU functionality and legitimacy."
+      ]
+    },
+    {
+      "doc_id": "7ee4a8342f80",
+      "title": "100 Words to Use Instead of “Long” - Home of English Grammar",
+      "url": "https://www.englishgrammar.org/words-long/",
+      "relevant": false,
+      "overview": "A list of 100 synonyms for the word 'long', organized by definition and usage, aimed at improving vocabulary and language precision.",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "50e510e8e71d",
+      "title": "What Is the Verb Do in English? | Adult ESL Grammar Lesson",
+      "url": "https://englishteacherkbob.com/what-is-the-verb-do-in-english-how-to-use-do-does-did-dont-doesnt-and-didnt/",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "995afe430134",
+      "title": "Europe's economic challenges discussed at the European Forum ...",
+      "url": "https://www.bruegel.org/analysis/europes-economic-challenges-discussed-european-forum-alpbach",
+      "relevant": true,
+      "overview": "Peer-reviewed analysis from the European Forum Alpbach 2024, summarizing key economic challenges facing Europe, including inequality, the green transition, automation, and demographic shifts. The document outlines both challenges and potential solutions discussed by experts.",
+      "key_findings": [
+        "The pandemic deepened inequality, with the world’s five richest people doubling their wealth since 2020, and the richest 20% owning 80% of total wealth (2024).",
+        "Europe’s green transition requires €700 billion per year, but the Green Deal currently mobilizes only €170 billion annually (2024).",
+        "Wealth inequality is self-reinforcing, as higher returns on assets benefit those already wealthy, and capital income now plays a larger role in climbing the income ladder (2024).",
+        "Demographic change threatens the sustainability of European pension systems and welfare states, as life expectancy increases and intergenerational fairness becomes a key concern (2024)."
+      ],
+      "quotes": [
+        "The world’s five richest people have doubled their wealth since 2020, and the richest 20 percent own 80 percent of total wealth.",
+        "The European Green Deal lacks the resources required to deliver this transition. Some estimates, cited at the forum, point to €700 billion needed per year.",
+        "Wealth inequality is self-reinforcing: returns are higher for those who already have substantial assets.",
+        "Demographic change threatens the sustainability of European pension systems and welfare states more generally."
+      ]
+    },
+    {
+      "doc_id": "1f33d0c4ae79",
+      "title": "How to Use Has and Have Correctly in English | Learna AI",
+      "url": "https://ailearna.com/blog/how-to-use-has-and-have-correctly-in-english",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "74879cc64fe7",
+      "title": "Gradual expansion of the EU economy ahead, time to tackle fiscal ...",
+      "url": "https://cepr.org/voxeu/columns/gradual-expansion-eu-economy-ahead-time-tackle-fiscal-challenges",
+      "relevant": true,
+      "overview": "A policy analysis from the CEPR and VoxEU, assessing the EU's economic recovery post-2023 stagnation, highlighting structural challenges and fiscal reforms needed for sustainable growth.",
+      "key_findings": [
+        "The EU economy stagnated in 2023, with real GDP growth of 0.3% in Q1 2024 marking the start of a modest expansion path.",
+        "Inflation in the EU fell from 10.6% in October 2022 to 2.4% in April 2024, driven by declining energy prices and easing underlying inflationary pressures.",
+        "Private consumption growth is expected to remain restrained, with the saving rate projected to rise to 14.4% in 2024, limiting consumption expansion.",
+        "Residential construction investment is expected to continue contracting in 2025 due to falling house prices and inventory build-up."
+      ],
+      "quotes": [
+        "The EU economy largely stagnated last year...",
+        "The 0.3% rebound in real GDP growth in the first quarter of the year has set the EU economy on the previously expected modest expansion path.",
+        "Inflation in the EU followed a similar path, though remaining slightly higher.",
+        "The new EU fiscal governance framework will guide a sustainable reduction of still high government debt."
+      ]
+    },
+    {
+      "doc_id": "dff0d4ba7c88",
+      "title": "Choose your experience | Web oficial Park Güell | Barcelona",
+      "url": "https://parkguell.barcelona/en/buy-tickets",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "c699ec3ac467",
+      "title": "Long Words from A to Z with Meanings - englishan.com",
+      "url": "https://englishan.com/long-words-from-a-to-z/",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "8d6aadf42ecd",
+      "title": "Breaking the vicious circle of the Eurozone debt crisis - LSE",
+      "url": "https://www.lse.ac.uk/research/research-impact-case-studies/breaking-the-vicious-circle-of-the-eurozone-debt-crisis",
+      "relevant": true,
+      "overview": "Peer-reviewed academic analysis of the 2010-2012 Eurozone debt crisis, focusing on the role of the European Central Bank (ECB) and the intellectual contributions of Paul De Grauwe in shaping ECB policy to prevent economic collapse.",
+      "key_findings": [
+        "In 2010, the Eurozone faced a sovereign debt crisis that threatened to break up the single currency area, with fears of economic recession, increased government debt, and banking crises by 2011-2012.",
+        "Paul De Grauwe's research demonstrated that the ECB needed to act as a lender of last resort by committing to unlimited purchases of government bonds to break the 'vicious circle' of economic decline.",
+        "The ECB's initial Securities Market Program (2009-2011) failed to stem the crisis due to its limited scope and the seniority of bonds purchased, which encouraged further downward pressure on bond prices.",
+        "On 6 September 2012, the ECB launched the Outright Monetary Transactions programme, a policy directly influenced by De Grauwe's analysis, which marked a shift in ECB strategy to address the 'bad equilibrium' in the Eurozone."
+      ],
+      "quotes": [
+        "The countries that had joined the Eurozone were unable to issue debt in their own currencies and, as a result, had lost the ability to guarantee that bond investors would be paid when bonds matured.",
+        "He found that the ECB would need to act as the lender of last resort in the Eurozone government bond markets, by giving a guarantee to bondholders that the money would always be available to pay out on maturing bonds.",
+        "The European Central Bank abandoned the Securities Market Program and dropped its seniority claim on the government bonds it bought under the Outright Monetary Transactions programme.",
+        "ECB President Mario Draghi used the phrase 'bad equilibrium' and gave an explanation that echoed De Grauwe’s conclusions."
+      ]
+    },
+    {
+      "doc_id": "dee0b48d8ad5",
+      "title": "do verb - Definition, pictures, pronunciation and usage notes | Oxford ...",
+      "url": "https://www.oxfordlearnersdictionaries.com/definition/american_english/do1_1",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "3da1b1fa5808",
+      "title": "Spatial Disparities in Economic Structural Change in Central and ...",
+      "url": "https://www.intereconomics.eu/contents/year/2025/number/2/article/spatial-disparities-in-economic-structural-change-in-central-and-eastern-europe-during-integration.html",
+      "relevant": true,
+      "overview": "Peer-reviewed study analysing structural economic changes in Central and Eastern European (CEE11) EU member states from 2010 to 2020, comparing them with the more developed EU14. The study uses productivity metrics and Theil indices to assess spatial disparities and policy implications for regional convergence.",
+      "key_findings": [
+        "Between 2010 and 2020, CEE11 NUTS3 regions showed uneven structural economic changes, with significant disparities in productivity growth compared to EU14 regions.",
+        "The study identifies three NUTS3 region types—predominantly urban (URB), intermediate (INT), and predominantly rural (RUR)—based on population distribution in urban clusters and rural grid cells.",
+        "Reindustrialisation efforts in CEE11, supported by foreign investment and policy frameworks like the 'European Industrial Renaissance', have not fully offset deindustrialisation trends influenced by globalisation and technological shifts."
+      ],
+      "quotes": [
+        "The results reveal significant structural changes in central and eastern European economies, with variations across different region types.",
+        "Reindustrialisation, discussed in literature since the 1990s, gained importance in EU policies after the 2008 crisis.",
+        "These regions must focus on transitioning to knowledge-based economies, enhancing productivity and business sophistication."
+      ]
+    },
+    {
+      "doc_id": "d97cb9016e4e",
+      "title": "Key-Test - keyboard test online",
+      "url": "https://en.key-test.ru/",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "ba77cd698989",
+      "title": "Economic growth challenges and responses - Eurofi",
+      "url": "https://www.eurofi.net/current-topics/economic-growth-challenges-and-responses/",
+      "relevant": true,
+      "overview": "Eurofi report analyzing economic growth challenges in Europe, focusing on inflation, productivity stagnation, and structural issues within the eurozone. The document outlines the impact of recent crises and the need for coordinated fiscal and structural reforms.",
+      "key_findings": [
+        "Inflation in the eurozone remains above the 2% target, with a slow decline despite monetary tightening post-pandemic and post-Ukraine war.",
+        "Labour productivity in major eurozone countries is stagnating or declining due to cyclical downturns, lack of productive investment, and insufficient innovation.",
+        "The EU and eurozone face weak growth prospects for 2023 and 2024, exacerbated by pre-existing economic and fiscal heterogeneities among member states.",
+        "Persistent inflation and slow growth are attributed to the 'paradox of the Euro'—a single currency with national policies lacking strong coordination."
+      ],
+      "quotes": [
+        "Inflation has started to decline but is too high, above the 2% target.",
+        "Labour productivity is stagnating, or even declining in the main countries of the euro zone notably due to the cyclical downturn, lack of productive investment and insufficient innovation.",
+        "Growth prospects in Europe for 2023 and 2024 are weak.",
+        "The paradox of the Euro is that a single currency and national economic policies coexist without a strong cement of coordination."
+      ]
+    },
+    {
+      "doc_id": "8d095128ba55",
+      "title": "Have vs Has vs Had: English Grammar Rules with Examples",
+      "url": "https://fluent-eng.com/have-vs-has-vs-had-english-grammar-rule-examples/",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "4877a720b4b3",
+      "title": "Intereconomics | Review of European Economic Policy",
+      "url": "https://www.intereconomics.eu/",
+      "relevant": true,
+      "overview": "Peer-reviewed journal article analyzing European economic policy challenges, with a focus on security and resilience in the context of hybrid threats.",
+      "key_findings": [
+        "The document discusses the impact of hybrid threats on Europe's security strategy, published in Volume 61, Issue 2, 2026.",
+        "It emphasizes that higher defence spending may not improve security if military and civilian instruments are not aligned, as noted by Armin Bolouri, Tim Lohse, and Salmai Qari.",
+        "The article highlights the need for societal cohesion and strategic credibility as key components of European resilience.",
+        "The authors argue that misalignment of resources risks eroding political support and peace, even with increased spending."
+      ],
+      "quotes": [
+        "In a security environment dominated by hybrid threats, Europe’s central challenge lies less in meeting a numerical benchmark than in aligning military and civilian instruments towards resilience, adaptability and societal cohesion.",
+        "Without such alignment, higher defence spending – even where economically feasible – risks increasing inputs while failing to strengthen security and eroding political support, strategic credibility and ultimately peace."
+      ]
+    },
+    {
+      "doc_id": "b217acfbd8ae",
+      "title": "Web oficial Park Güell | Barcelona",
+      "url": "https://parkguell.barcelona/",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "229830a7055c",
+      "title": "long - Wiktionary, the free dictionary",
+      "url": "https://en.wiktionary.org/wiki/long",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "2fb83bd039e9",
+      "title": "Key - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Key",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "153eda56cac6",
+      "title": "For a Future-Proof EU Economic Governance - European Movement",
+      "url": "https://europeanmovement.eu/policy/for-a-more-democratic-and-harmonised-eu-economic-governance/",
+      "relevant": true,
+      "overview": "A policy document advocating for a more democratic, accountable, and inclusive EU economic governance framework, emphasizing the need for structural reforms, increased transparency, and stronger fiscal mechanisms to address economic stagnation and global challenges.",
+      "key_findings": [
+        "The document argues that current EU economic governance prioritizes debt reduction over necessary investments, which hinders progress on climate change, inequality, and economic transformation.",
+        "Enrico Letta’s High-Level Report on the future of the Single Market is cited as a key proposal to enhance the EU economy’s response to global challenges.",
+        "The document calls for a centralised fiscal mechanism, such0 as a Eurozone Fiscal Capacity, to stabilize the EU and support Member States during economic shocks.",
+        "Strategic investments in digital infrastructure are highlighted as essential for fostering entrepreneurship, competitiveness, and innovation."
+      ],
+      "quotes": [
+        "The balance is more on debt and deficit reduction rather than necessary investments to help the EU deal with the challenges ahead.",
+        "The EU must be ambitious and audacious in its efforts to develop a new Single Market capable of boosting European integration.",
+        "A more inclusive and participatory decision-making process contributes to Europe’s stability and is paramount for advancing democratic governance.",
+        "Strategic investments in digital infrastructure serve a dual purpose: they’d foster an ecosystem that supports entrepreneurship and enhance the competitiveness of European industries worldwide."
+      ]
+    },
+    {
+      "doc_id": "fc2bc8f159a2",
+      "title": "Using ‘Have’ and ‘Has’ in English Grammar | EC English",
+      "url": "https://www.ecenglish.com/en/learn-english-for-free/grammar/using-have-and-has-2/",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "c522fd9b8893",
+      "title": "How can Europe avoid secular stagnation? - Bruegel",
+      "url": "https://www.bruegel.org/blog-post/how-can-europe-avoid-secular-stagnation",
+      "relevant": true,
+      "overview": "A policy-oriented analysis of the eurozone's economic challenges, focusing on secular stagnation and the need for coordinated fiscal and monetary measures to stimulate growth and employment.",
+      "key_findings": [
+        "The eurozone has experienced a prolonged period of weak economic recovery since 2011, with inflation rates falling below 2 percent and expectations disanchored from the 2 percent target.",
+        "Unit labor cost gaps between deficit countries like Italy and surplus countries like Germany have widened to over 20 percent, exacerbating economic imbalances.",
+        "Private and public debt levels in the eurozone periphery have risen significantly, with Spain's public debt to GDP ratio increasing by more than 60 percent since the crisis.",
+        "Structural reforms, such as increasing working hours and retirement ages, are recommended to address unit labor cost divergences in deficit countries."
+      ],
+      "quotes": [
+        "The economic recovery in the eurozone has been weak and recent data show that it may slide back into a full recession again.",
+        "The gap in unit labor costs that has opened between Italy and Germany since the beginning of the euro amounts to more than 20 percent.",
+        "Debt to GDP ratios have increased prior to the crisis mostly in the private sector while since the beginning of the crisis, high deficits have added to a substantial increase in public debt to GDP ratios, for example by more than 60 percent of GDP in Spain.",
+        "Structural reforms such as increases in annual working hours and increases in retirement ages are recommended to address the unit labor cost problem in deficit countries."
+      ]
+    },
+    {
+      "doc_id": "04288e50cc2e",
+      "title": "LONG",
+      "url": "https://www.long.com/",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "acf09e10a845",
+      "title": "Europe's economy is at a crossroads. Will it take the right path?",
+      "url": "https://www.brookings.edu/articles/europes-economy-is-at-a-crossroads-will-it-take-the-right-path/",
+      "relevant": true,
+      "overview": "A Brookings Institution analysis of the European economy's challenges and the European Commission's Competitiveness Compass strategy, focusing on competitiveness, innovation, and geopolitical risks.",
+      "key_findings": [
+        "The European economy grew at 1% annually in 2024, with much of the growth attributed to Spain's strong economy, while Germany's economy shrank.",
+        "The Competitiveness Compass, adopted in late January 2024, aims to address Europe's lack of competitiveness, as highlighted by former Italian Prime Ministers Mario Draghi and Enrico Letta.",
+        "Europe faces a fragmented capital market, with 300 billion euros in savings flowing to foreign markets annually, hindering domestic investment and innovation.",
+        "The European Union plans to reduce reporting burdens by at least 20%, targeting green and energy reporting requirements as a first step."
+      ],
+      "quotes": [
+        "Economic growth is a very slow 1% per year, and much of that is because of Spain’s strong economy.",
+        "The main source of European woes lies not in the near-term economic outlook... the core problem is the European lack of competitiveness.",
+        "Every year, 300 billion euros of European savings flow to foreign markets—and at the same time, foreigners are buying E.U. companies.",
+        "The European Commission has committed to an unprecedented simplification effort aiming to reduce at least 25% of the reporting burden."
+      ]
+    },
+    {
+      "doc_id": "81fdce8e010c",
+      "title": "When to Use Has vs Have: A Simple Guide for English Learners",
+      "url": "https://englishgrammarzone.com/when-to-use-has-vs-have-guide-examples-mistakes/",
+      "relevant": false,
+      "overview": "A beginner-friendly English grammar guide explaining the difference between 'has' and 'have' based on subject-verb agreement, with examples and common mistakes.",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "7daf9990a741",
+      "title": "Web oficial Park Güell | Barcelona",
+      "url": "https://parkguell.barcelona/es",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "0fd1bc6dbed6",
+      "title": "Justin Long - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Justin_Long",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "4d35bf51b8a0",
+      "title": "Risks to the forecast from the euro area crisis - OBR",
+      "url": "https://obr.uk/box/risks-to-the-forecast-from-the-euro-area-crisis/",
+      "relevant": true,
+      "overview": "A UK-based analysis of how an intensification of the euro area sovereign debt crisis could impact the UK economy, focusing on trade, credit conditions, government borrowing costs, and financial system stability. The document is based on data from October 2011 and outlines scenarios for economic effects.",
+      "key_findings": [
+        "The euro area sovereign debt crisis intensified rapidly after the 2011 financial crisis, with the OBR forecasting a narrowing of the spread between UK bank funding costs and government borrowing rates by 2012 and stabilization by 2014.",
+        "UK banks have significant direct exposures to euro area countries like Spain, France, and Germany, which could lead to prolonged tighter credit conditions if the crisis persists.",
+        "The OBR highlights that a disorderly default on euro area sovereign debt could severely strain the global financial system, leading to tighter credit and depressed world output and trade.",
+        "UK gilt yields are historically low due to market perceptions of lower risk relative to euro area countries, but the impact of a deeper crisis on gilt yields is uncertain."
+      ],
+      "quotes": [
+        "Since our March 2011 forecast, the euro area sovereign debt crisis has rapidly intensified.",
+        "UK banks have relatively large direct exposures to euro area countries such as Spain, France and Germany.",
+        "A more serious escalation of the crisis, such as a disorderly default on sovereign debt, could put the global financial system under severe strain.",
+        "It is not clear whether a further deepening of the euro area crisis would reduce gilt yields or increase them."
+      ]
+    },
+    {
+      "doc_id": "735bbf5f47f3",
+      "title": "Chapter 13. Structural Reforms in Countries That Have Achieved ...",
+      "url": "https://www.elibrary.imf.org/display/book/9781484303139/ch013.xml",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "600055e62703",
+      "title": "Key - Simple English Wikipedia, the free encyclopedia",
+      "url": "https://simple.wikipedia.org/wiki/Key",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "d2e094f94f08",
+      "title": "has Definition & Meaning - Dictionary.net",
+      "url": "https://www.dictionary.net/dictionary/has",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "0452ff6dd873",
+      "title": "Opening times | Web oficial Park Güell | Barcelona",
+      "url": "https://parkguell.barcelona/en/planning-your-visit/prices-and-times",
+      "relevant": false,
+      "overview": "A website providing operational details for Park Güell in Barcelona, including opening hours, ticket pricing, and visitor guidelines. Not relevant to the research question about economic stagnation in Europe.",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "9c84bb9bdbee",
+      "title": "Keyboard Test Online",
+      "url": "https://keyboard-test.space/",
+      "relevant": false,
+      "overview": "A website offering an online keyboard testing service to identify hardware or software issues with a user's keyboard.",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "de5d7f1d6c0e",
+      "title": "Euro area crisis - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Euro_area_crisis",
+      "relevant": true,
+      "overview": "Peer-reviewed Wikipedia article summarizing the euro area crisis (2009–2018), focusing on causes, key events, and economic impacts across member states.",
+      "key_findings": [
+        "The euro area crisis began in late 2009 when Greece disclosed budget deficits far exceeding previous estimates, triggering a chain of financial and political instability across the eurozone.",
+        "The crisis was worsened by the inability of eurozone states to devalue their currencies, leading to structural imbalances and capital flows favoring Northern Europe over Southern Europe.",
+        "Greece exited its bailout program in 2014 after achieving improved structural deficits, while Spain never received a formal government bailout, highlighting uneven recovery paths.",
+        "The European Central Bank's one-size-fits-all interest rate policy incentivized Northern European investors to lend to Southern states, contributing to unsustainable debt accumulation."
+      ],
+      "quotes": [
+        "The euro area crisis, also known as the eurozone crisis, was a debt crisis and financial crisis in the European Union (EU) that occurred between 2009 and 2018.",
+        "The crisis was worsened by the inability of states to resort to devaluation (reductions in the value of the national currency) due to having the euro as a shared currency.",
+        "Return to economic growth and improved structural deficits enabled Ireland and Portugal to exit their bailout programmes in July 2014.",
+        "Despite different macroeconomic conditions, the European Central Bank could only adopt one interest rate, choosing one that meant that real interest rates in Germany were high (relative to inflation) and low in Southern eurozone member states."
+      ]
+    },
+    {
+      "doc_id": "0c822041e41d",
+      "title": "Origin and creation | Web oficial Park Güell | Barcelona",
+      "url": "https://parkguell.barcelona/en/park-guell/origin-and-creation",
+      "relevant": false,
+      "overview": "This document is a promotional and historical overview of Park Güell, focusing on its origins, the city of Barcelona in the late 19th century, and the cultural and architectural movement of Modernisme. It does not address economic stagnation in Europe.",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "9b9434180fa6",
+      "title": "Can Europe Stay Productive? Macroeconomic and Demographic ...",
+      "url": "https://populationandeconomics.pensoft.net/article/170643/",
+      "relevant": true,
+      "overview": "Peer-reviewed study using macroeconomic and demographic data to analyze the productivity challenges facing Europe, with a focus on structural factors and policy implications.",
+      "key_findings": [
+        "The study finds that declining labor participation rates in Europe, particularly among women and older workers, are a key factor in productivity stagnation (p. 12).",
+        "Population aging is identified as a major constraint on long-term productivity growth, with the median age in the EU projected to rise from 43.5 years in 2020 to 46.5 years by 2050 (p. 15).",
+        "The research highlights that labor market rigidities, such as high minimum wages and limited mobility, hinder the reallocation of labor to more productive sectors (p. 18).",
+        "Productivity growth in the EU has slowed to 0.3% annually since 2010, compared to 1.5% in the US, according to Eurostat data (p. 20)."
+      ],
+      "quotes": [
+        "\"Declining labor participation rates, especially among women and older workers, are a critical drag on productivity growth in Europe.\" (p. 12)",
+        "\"Population aging is not just a demographic challenge; it is a structural constraint on economic dynamism.\" (p. 15)",
+        "\"Labor market rigidities prevent the reallocation of labor to more productive sectors, exacerbating productivity stagnation.\" (p. 18)",
+        "\"The EU's productivity growth has slowed to 0.3% annually since 2010, far below the US rate of 1.5%.\" (p. 20)"
+      ]
+    },
+    {
+      "doc_id": "b098f647cd93",
+      "title": "The Euro Crisis - Fondation Robert Schuman",
+      "url": "https://www.robert-schuman.eu/en/european-issues/240-the-euro-crisis",
+      "relevant": true,
+      "overview": "A personal reflection by Edmond Alphandéry, a former French Minister and CEO of CNP Assurances, on the origins, performance, and crisis of the euro. The document outlines the historical context of the euro's creation, its early success, and the subsequent challenges, with a focus on the structural imbalances between monetary and fiscal policies within the eurozone.",
+      "key_findings": [
+        "The euro was launched in 1999 with the expectation of fostering economic growth, but its monetary policy framework was criticized for being too rigid and not accounting for economic diversity among member states.",
+        "The Stability and Growth Pact (1997) set fiscal deficit and debt ceilings at 3% and 60% of GDP, respectively, but poor enforcement led to widespread violations, including by Germany and France.",
+        "The eurozone entered a crisis in 2010, marked by a contraction of GDP by -0.3% in the last quarter of 2011, signaling the onset of a potential recession.",
+        "The European Central Bank (ECB) was designed to be politically independent, with a mandate strictly confined to maintaining price stability, which contrasts with the decentralized fiscal policies of member states."
+      ],
+      "quotes": [
+        "We all know that if there were a breakdown of the euro, then no country in the world would be spared. Consequences would be tragic everywhere.",
+        "The framework which has been designed in the Maastricht Treaty under the acronym of EMU was founded on two pillars: a monetary pillar which was very strong and solid (and still is), and an economic one which having been ill-conceived has been weak since its inception.",
+        "The ECB is prohibited of any monetary financing in favour of Union's institutions, central or local governments.",
+        "It is telling that this acceleration [of public debt increase] is more pronounced in the peripheric countries which later on have been hit by the euro crisis."
+      ]
+    },
+    {
+      "doc_id": "5f5cc5ccfe50",
+      "title": "The European Union and Economic Reforms: The Case of Spain",
+      "url": "https://www.realinstitutoelcano.org/en/work-document/the-european-union-and-economic-reforms-the-case-of-spain/",
+      "relevant": true,
+      "overview": "Peer-reviewed analysis of Spain's economic transformation through EU integration, focusing on the impact of the European Monetary Union (EMU) on structural reforms and economic performance.",
+      "key_findings": [
+        "Spain's EU accession in 1986 facilitated macro- and microeconomic reforms, including fiscal consolidation and central bank independence, which contributed to economic modernization.",
+        "Despite these reforms, the EMU did not lead to deep structural changes necessary for long-term competitiveness, as low interest rates postponed necessary reforms.",
+        "EU integration has significantly boosted Spain's economic convergence, with per capita income reaching 90% of the EU-15 average by 2006.",
+        "EU funds accounted for 24% of Spain's annual agrarian income and played a central role in infrastructure development, including the Madrid-Barcelona high-speed train."
+      ],
+      "quotes": [
+        "Spain has closed the wealth gap with Europe’s richest countries.",
+        "The decision to comply with the EMU Maastricht Treaty criteria led to the implementation of macro- and microeconomic policies that resulted in fiscal consolidation, central bank independence and wage moderation.",
+        "Without the euro the huge trade deficit would have already forced a devaluation and the implementation of more restrictive fiscal policies.",
+        "The process of economic reforms must be a domestic process led by domestic actors willing to carry them out."
+      ]
+    },
+    {
+      "doc_id": "3e4b902aa715",
+      "title": "European Economic Policy | BMWE - bundeswirtschaftsministerium.de",
+      "url": "https://www.bundeswirtschaftsministerium.de/Redaktion/EN/Dossier/european-economic-policy.html",
+      "relevant": false,
+      "overview": "This document is a government publication from Germany's Federal Ministry of Economics, providing a historical overview of European economic integration and the progress of the Single Market. It does not analyze current economic stagnation in Europe.",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "d4706d58a6d7",
+      "title": "EU economic policy and Ireland - European Commission",
+      "url": "https://ireland.representation.ec.europa.eu/strategy-and-priorities/key-eu-policies-ireland/eu-economic-policy-and-ireland_en",
+      "relevant": true,
+      "overview": "EU economic policy document highlighting Ireland's role and the impact of global and geopolitical events on the EU economy, with a focus on recovery from the pandemic, sanctions against Russia, and the role of EU financial instruments.",
+      "key_findings": [
+        "Ireland's economy transitioned from stagnation in the mid-20th century to growth through EU membership, leveraging the Single Market, euro adoption, and coordinated fiscal policies.",
+        "The Russia-Ukraine war disrupted EU economic growth, leading to real GDP contraction in 2022 and 2023, with 2025 growth projected at 1.5%.",
+        "Ireland received €1.22 billion under the EU's Temporary Crisis and Transition Framework to support companies affected by Russia's war against Ukraine.",
+        "Ireland is set to receive €1.15 billion in Recovery and Resilience Facility grants between 2024 and 2026, with 42% allocated to climate investments and reforms."
+      ],
+      "quotes": [
+        "The EU’s Single Market, adoption of the euro and coordinated EU economic and fiscal policy help ensure Ireland’s economy remains stable and competitive on a global scale.",
+        "Following robust growth in 2021 and 2022, the EU economy lost momentum with real GDP contracting towards the end of 2022 and barely growing during 2023.",
+        "Support for Ireland through the framework included the approval of a €1.22 billion scheme to support companies impacted by Russia’s war against Ukraine.",
+        "Between 2024 and 2026 Ireland will receive an estimated €1.15 billion in Recovery and Resilience Facility grants, of which 42% will support climate investments and reforms."
+      ]
+    },
+    {
+      "doc_id": "58f121a6b5d1",
+      "title": "Maps and services | Web oficial Park Güell | Barcelona",
+      "url": "https://parkguell.barcelona/en/planning-your-visit/maps-and-services",
+      "relevant": false,
+      "overview": "",
+      "key_findings": [],
+      "quotes": []
+    },
+    {
+      "doc_id": "ed4f12d2e14d",
+      "title": "The European Central Bank in a State of Crisis: Policies, Effects and ...",
+      "url": "https://www.exploring-economics.org/en/discover/the-european-central-bank-in-a-state-of-crisis/",
+      "relevant": true,
+      "overview": "Critical analysis of the European Central Bank's crisis policies since 2008, focusing on its shift from passive to activist monetary policy and its role in shaping the European economic landscape.",
+      "key_findings": [
+        "Since 2008, the ECB has expanded its interventions from stabilizing the banking sector to influencing the real economy, with bond-buying programs like the SMP significantly lowering borrowing costs for peripheral eurozone countries.",
+        "The ECB's unconventional policies, including massive liquidity injections and bond purchases, have led to a tripling of its balance sheet, making it one of the largest creditors in the global economy.",
+        "Despite these measures, ECB liquidity injections failed to stimulate real economic growth, as banks hoarded funds instead of lending to businesses and households.",
+        "Long-term economic data suggest a secular decline in growth rates in Western industrialized economies, with the EU's potential growth rate weakening by one percent, indicating structural stagnation."
+      ],
+      "quotes": [
+        "The ECB, through its massive expansion of central bank balance sheets, took on the fiscal policy role traditionally held by finance ministries.",
+        "The ECB's responses, coupled with new banking regulations, helped stabilise Europe’s banking system, but these measures had a limited real-world economic impact.",
+        "Weak growth potential has deeper roots. Some economists argue that the 2008 financial crisis and the subsequent sluggish GDP growth reflect a more fundamental crisis in Western industrialised economies.",
+        "Even global GDP growth has slowed in recent decades and is now heavily dependent on China’s expansion."
+      ]
+    },
+    {
+      "doc_id": "52dca93dcdc5",
+      "title": "Brexit analysis - Office for Budget Responsibility",
+      "url": "https://obr.uk/forecasts-in-depth/the-economy-forecast/brexit-analysis/",
+      "relevant": true,
+      "overview": "Official analysis by the Office for Budget Responsibility (OBR) on the economic and fiscal implications of Brexit, focusing on long-term productivity, trade, migration, and public finances.",
+      "key_findings": [
+        "The UK's post-Brexit trade relationship with the EU, under the Trade and Cooperation Agreement (TCA), is estimated to reduce long-run productivity by 4% compared to remaining in the EU, due to non-tariff barriers.",
+        "Exports and imports will be around 15% lower in the long run than if the UK had remained in the EU, with neutral effects on the current account over the medium term.",
+        "Net migration to the UK is projected to settle at 340,000 per year in the medium term, up from an earlier estimate of 129,000, reflecting sustained inward migration post-Brexit.",
+        "The UK's GDP is estimated to increase by 0.1% over 15 years from the UK-Japan Comprehensive Economic Partnership Agreement, which replicates the EU-Japan deal."
+      ],
+      "quotes": [
+        "The post-Brexit trading relationship between the UK and EU, as set out in the ‘Trade and Cooperation Agreement’ that came into effect on 1 January 2021, will reduce long-run productivity by 4 per cent relative to remaining in the EU.",
+        "Both exports and imports will be around 15 per cent lower in the long run than if the UK had remained in the EU.",
+        "We now assume net migration settles at 340,000 a year in the medium term, based on the ONS 2022-based population projections.",
+        "The Government’s economic impact assessment suggests that it will increase the UK’s GDP by 0.1 per cent over the next 15 years."
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "id": "c_964447aa",
+      "statement": "EU economic stagnation, 2023",
+      "source_doc_ids": [
+        "74879cc64fe7",
+        "ba77cd698989",
+        "c522fd9b8893",
+        "9b9434180fa6",
+        "995afe430134",
+        "5f5cc5ccfe50",
+        "ed4f12d2e14d"
+      ],
+      "confidence": "high",
+      "merges_into": null
+    },
+    {
+      "id": "c_2f4c8de3",
+      "statement": "EU demographic decline, 2050",
+      "source_doc_ids": [
+        "e8ded5cca0ba"
+      ],
+      "confidence": "high",
+      "merges_into": null
+    },
+    {
+      "id": "c_82c3f3dd",
+      "statement": "EU productivity stagnation, 2010-2020",
+      "source_doc_ids": [
+        "995afe430134",
+        "9b9434180fa6",
+        "5f5cc5ccfe50",
+        "ba77cd698989",
+        "ed4f12d2e14d"
+      ],
+      "confidence": "high",
+      "merges_into": null
+    },
+    {
+      "id": "c_10417cd2",
+      "statement": "EU green transition, €700 billion needed",
+      "source_doc_ids": [
+        "995afe430134"
+      ],
+      "confidence": "high",
+      "merges_into": null
+    },
+    {
+      "id": "c_b0305181",
+      "statement": "EU fiscal governance, debt reduction over investment",
+      "source_doc_ids": [
+        "153eda56cac6",
+        "995afe430134",
+        "ba77cd698989",
+        "c522fd9b8893"
+      ],
+      "confidence": "high",
+      "merges_into": null
+    },
+    {
+      "id": "c_9c1f7346",
+      "statement": "Eurozone debt crisis, 2010-2012",
+      "source_doc_ids": [
+        "8d6aadf42ecd",
+        "de5d7f1d6c0e",
+        "b098f647cd93"
+      ],
+      "confidence": "high",
+      "merges_into": null
+    },
+    {
+      "id": "c_5a020d12",
+      "statement": "EU structural reforms, 2024",
+      "source_doc_ids": [
+        "153eda56cac6",
+        "995afe430134",
+        "ba77cd698989",
+        "c522fd9b8893",
+        "ed4f12d2e14d"
+      ],
+      "confidence": "high",
+      "merges_into": null
+    },
+    {
+      "id": "c_c7b39e57",
+      "statement": "EU demographic shifts, 2010-2020",
+      "source_doc_ids": [
+        "3da1b1fa5808"
+      ],
+      "confidence": "high",
+      "merges_into": null
+    },
+    {
+      "id": "c_d7cbfb40",
+      "statement": "EU fiscal policy, 2024",
+      "source_doc_ids": [
+        "153eda56cac6",
+        "995afe430134",
+        "ba77cd698989",
+        "c522fd9b8893",
+        "ed4f12d2e14d"
+      ],
+      "confidence": "high",
+      "merges_into": null
+    },
+    {
+      "id": "c_c017ae49",
+      "statement": "EU competitiveness, 2024",
+      "source_doc_ids": [
+        "acf09e10a845",
+        "995afe430134",
+        "ba77cd698989",
+        "c522fd9b8893",
+        "ed4f12d2e14d"
+      ],
+      "confidence": "high",
+      "merges_into": null
+    }
+  ],
+  "search_queries": [
+    {
+      "id": "q_503a3aa6",
+      "query": "What are the key economic challenges facing the European Union today?",
+      "rationale": "This query explores the general context of economic stagnation in Europe by identifying common challenges faced by the EU.",
+      "category": "general"
+    },
+    {
+      "id": "q_e321d4f7",
+      "query": "How has the European Union's economic policy impacted growth and stagnation?",
+      "rationale": "This query investigates the role of EU policies in shaping economic outcomes, linking to both general and scientific analyses.",
+      "category": "general"
+    },
+    {
+      "id": "q_04e1a58f",
+      "query": "What role does demographic change play in Europe's economic stagnation?",
+      "rationale": "This query focuses on a key demographic factor that may contribute to economic stagnation, combining general and scientific perspectives.",
+      "category": "general"
+    },
+    {
+      "id": "q_96d9e8b8",
+      "query": "What are the long-term economic consequences of the European debt crisis?",
+      "rationale": "This query examines historical economic events that may have contributed to current stagnation, linking to general and historical analysis.",
+      "category": "general"
+    },
+    {
+      "id": "q_e8ada66f",
+      "query": "How do structural economic reforms in Europe compare to other developed regions?",
+      "rationale": "This query compares Europe's economic strategies with other regions to understand the basis of stagnation, combining general and scientific perspectives.",
+      "category": "general"
+    }
+  ]
+}

@@ -36,7 +36,6 @@ class LLMClients:
                 },
         )
 
-
         """For section writers"""
         self._writer = ChatOpenAI(
             model=VLLM_MODEL,
@@ -49,7 +48,7 @@ class LLMClients:
                 "chat_template_kwargs": {"enable_thinking": False}},
         )
 
-
+    # strict path (per-schema FSM)
     def structured_llm(self, schema: Type[T]) -> BaseChatModel:
         
         return self._fast.with_structured_output(schema, method="json_schema")
@@ -59,8 +58,6 @@ class LLMClients:
         
         return self._cheap.with_structured_output(schema, method="json_schema")
     
-    def writer_llm(self, **kwargs):
-        return self._writer.bind(**kwargs)
     
 _clients: LLMClients | None = None
 

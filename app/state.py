@@ -5,10 +5,10 @@ from typing import TypedDict, Annotated, Literal
 from typing_extensions import NotRequired
 from pydantic import BaseModel, Field
 
-class Query(BaseModel):
+
+class QueryLLM(BaseModel):
     """A search query with a one-line rationale. The rationale forces
     the model to commit to *why* it's running this query."""
-    id: str
     query: str = Field(
         min_length=4, max_length=200,
         description=(
@@ -38,6 +38,19 @@ class Query(BaseModel):
         ),
     )
 
+class Query(QueryLLM):
+    id: str 
+
+class QuerySetLLM(BaseModel):
+    """A diverse set of queries covering different angles of the question."""
+    queries: list[QueryLLM] = Field(
+        min_length=2, max_length=5,
+        description=(
+            "3-5 queries, each exploring a distinct angle. "
+            "No near-duplicates — two queries that differ only in wording count as one."
+        ),
+    )
+
 class Document(BaseModel):
     """A raw search hit with scraped content. Cold storage — never sent 
     whole to the LLM. The summarizer reads it one at a time."""
@@ -49,13 +62,10 @@ class Document(BaseModel):
     search_score: float = 0.0
 
 
-class DocSummary(BaseModel):
+class DocSummaryLLM(BaseModel):
     """Compressed view of a single doc.
     Schema fields are deliberate: `relevant` forces a yes/no commitment, 
     `key_findings` forces specificity, `quotes` provide auditable evidence."""
-    doc_id: str
-    title: str
-    url: str
     relevant: bool = Field(description="Does this doc actually help answer the question?")
     overview: str = Field(
         default="",
@@ -75,51 +85,70 @@ class DocSummary(BaseModel):
         max_length=4,
     )
 
-def merge_claims_by_id(existing: list["Claim"], updates: list["Claim"]) -> list["Claim"]:
-    """Reducer for `claims`: an update with a matching id REPLACES the existing
-    entry — used so extract_claims can fold new sources into a claim across loops.
-    New ids are appended. Preserves insertion order."""
-    by_id: dict[str, "Claim"] = {c.id: c for c in existing}
-    for c in updates:
-        by_id[c.id] = c
-    return list(by_id.values())
+class DocSummary(DocSummaryLLM):
+    doc_id: str
+    title: str
+    url: str
+
+def merge_claims_by_topic(
+    existing: list[Claim],
+    updates: list[Claim],
+) -> list[Claim]:
+    by_topic = {claim.topic: claim for claim in existing}
+
+    for update in updates:
+        previous = by_topic.get(update.topic)
+
+        if previous is None:
+            by_topic[update.topic] = update
+            continue
+
+        by_topic[update.topic] = Claim(
+            topic=previous.topic,
+            source_doc_ids=list(
+                dict.fromkeys([
+                    *previous.source_doc_ids,
+                    *update.source_doc_ids,
+                ])
+            ),
+            confidence=update.confidence,
+        )
+
+    return list(by_topic.values())
 
 class Claim(BaseModel):
     """A specific factual claim with provenance. Built by aggregating 
     findings across docs. The planner organizes these into sections."""
-    id: str
-    statement: str = Field(
-        description=("ONE atomic fact in one sentence. Must contain at least one specific: "
-            "date, number, named person, named place, or named event. "
-            "If the sentence has two independent facts joined by 'and' or a comma, "
-            "split it into two claims. "
-            "Good: 'Constantinople fell to Mehmed II on 29 May 1453.' "
-            "Bad: 'The empire declined due to military weakness, economic stagnation, "
-            "and religious schism' (three claims fused into one)."),
+    topic: str = Field(
+        description=("Canonical topic label. Reuse the exact existing topic label "
+            "when new evidence belongs to an existing topic."),
         max_length=150)
     source_doc_ids: list[str] = Field(min_length=1)
     confidence: Literal["high", "medium", "low"]
-    merges_into: str | None = Field(
-        default=None,
-        description="Existing claim id (e.g. 'c_5918d72d') if this restates that claim. Null for new claims.",
-    )
-
-
-class SectionPlan(BaseModel):
-    """A planned section. `claim_ids` is the contract — the section writer 
-    only gets these claims, nothing else."""
-    id: str
+    
+class SectionPlanLLM(BaseModel):
+    """A planned section. `claim_ids` is mp and summaries is the detail."""
     title: str
     angle: str = Field(
         description="2 sentences about what this section covers. Not the content itself.", 
         max_length=300)
-    claim_ids: list[str] = Field(min_length=1)
+    claim_topics: list[str] = Field(
+        min_length=1,
+        description=(
+            "Extact topic labels copied from the provided claims."
+            "Do not paraphrase or invent topic labels."
+        ),
+    )
+class SectionPlan(SectionPlanLLM):
+    id: str
 
+class ReportPlanLLM(BaseModel):
+    title: str = Field(max_length=150)
+    sections: list[SectionPlanLLM] = Field(min_length=3, max_length=6)
 
 class ReportPlan(BaseModel):
     title: str = Field(max_length=150)
     sections: list[SectionPlan] = Field(min_length=3, max_length=6)
-
 
 class WrittenSection(BaseModel):
     """A section after the writer has filled it in. `citations_used` lets 
@@ -130,7 +159,7 @@ class WrittenSection(BaseModel):
     citations_used: list[str] = Field(default_factory=list)
 
 
-class ReflectionResult(BaseModel):
+class ReflectionResultLLM(BaseModel):
     current_understanding: str = Field(
         description=(
             "2-5 sentences summarizing what the claims have established so far."
@@ -140,8 +169,11 @@ class ReflectionResult(BaseModel):
     )
     is_sufficient: bool
     knowledge_gap: str = Field(description="What's still missing, 2-3 sentences", max_length=400)
-    follow_up_queries: list[Query] = Field(default_factory=list, max_length=4)
+    follow_up_queries: list[QueryLLM] = Field(default_factory=list, max_length=4)
 
+class ReflectionResult(ReflectionResultLLM):
+    loop: int = 0
+    follow_up_queries: list[Query] = Field(default_factory=list)
 
 #Overall state
 class OverallState(TypedDict):
@@ -152,11 +184,12 @@ class OverallState(TypedDict):
 
     # ---- Accumulated across the run (parallel-safe via reducers) ----
     search_queries: Annotated[list[Query], operator.add]
+    searched_queries_ids: Annotated[list[str], operator.add]
     search_hits: list[Document] # un-scraped content
     hits_to_scrape: list[Document] # overwrite per loop 
     raw_docs: Annotated[list[Document], operator.add] # scraped content
     doc_summaries: Annotated[list[DocSummary], operator.add]
-    claims: Annotated[list[Claim], merge_claims_by_id]
+    claims: Annotated[list[Claim], merge_claims_by_topic]
     understanding_history: Annotated[list[str], operator.add] 
     reflection_history: Annotated[list[ReflectionResult], operator.add]
     reflected_doc_ids: Annotated[list[str], operator.add]

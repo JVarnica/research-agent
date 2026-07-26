@@ -9,8 +9,9 @@ from pydantic import BaseModel, Field
 
 from langgraph.types import Send
 from .state import (
-    OverallState, Query, Document, DocSummary, Claim, 
-    ReportPlan, SectionPlan, WrittenSection, ReflectionResult, 
+    OverallState, Query, QuerySetLLM, Document, DocSummaryLLM, DocSummary,
+    Claim, ReportPlanLLM, ReportPlan, SectionPlan, WrittenSection, ReflectionResult,
+    ReflectionResultLLM 
 )
 from .llm import get_clients
 from .search import (
@@ -45,35 +46,21 @@ Route each query to one category:
 
 Default to 'general' when unsure."""
 
-
-class InitialQueries(Query.__class__):  # placeholder, see below
-    pass
-
-class QuerySet(BaseModel):
-    """A diverse set of queries covering different angles of the question."""
-    queries: list[Query] = Field(
-        min_length=2, max_length=5,
-        description=(
-            "3-5 queries, each exploring a distinct angle. "
-            "No near-duplicates — two queries that differ only in wording count as one."
-        ),
-    )
-
 async def generate_queries(state: OverallState) -> dict:
     task_id = state["task_id"]
     _emit(task_id, "stage", stage="generating_queries", message="Planning search strategy")
     
-    structured = get_clients().struct_cheap_llm(QuerySet)
-    result: QuerySet = await structured.ainvoke([
+    structured = get_clients().struct_cheap_llm(QuerySetLLM)
+    result: QuerySetLLM = await structured.ainvoke([
         {"role": "system", "content": QUERY_GEN_PROMPT},
         {"role": "user", "content": state["original_query"]},
     ])
     
-    # Stamp fresh IDs (model may or may not provide them; we own ID space)
+    # Model no need to make ids anymore
     queries = [
-        Query(id=f"q_{uuid.uuid4().hex[:8]}", query=q.query, 
-              rationale=q.rationale, category=q.category)
-        for q in result.queries
+        Query(id=f"q_{uuid.uuid4().hex[:8]}", 
+              **query.model_dump())
+        for query in result.queries
     ]
     _emit(task_id, "queries_generated", count=len(queries),
           queries=[{"query": q.query, "rationale": q.rationale, "category": q.category} for q in queries]) #emits all queries 
@@ -169,20 +156,24 @@ async def summarize_one_doc(branch_input: dict) -> dict:
     task_id = branch_input["task_id"]
     doc: Document = branch_input["doc"]
     
-    structured = get_clients().struct_cheap_llm(DocSummary)
     try:
-        summary: DocSummary = await structured.ainvoke([
-            {"role": "user", "content": SUMMARIZE_PROMPT.format(
+        # validation & retry guided decoding affects too much
+        result: DocSummaryLLM = await get_clients().validated(DocSummaryLLM,
+            [{"role": "user", "content": SUMMARIZE_PROMPT.format(
                 question=branch_input["original_query"],
                 title=doc.title,
                 url=doc.url,
                 content=doc.snippet,
-            )},
-        ])
-        # The schema lets the model leave doc_id/url unset; we own them
-        summary.doc_id = doc.id
-        summary.url = doc.url
-        summary.title = doc.title
+            )},],
+            tier="cheap",
+            )
+        # Add the document IDS 
+        summary = DocSummary(
+            doc_id = doc.id,
+            url = doc.url,
+            title = doc.title,
+            **result.model_dump()
+        )
         logger.debug("summary doc_id=%s url=%s relevant=%s findings=%s quotes=%s",
                 doc.id, doc.url, summary.relevant,
                 summary.key_findings, summary.quotes)
@@ -208,29 +199,28 @@ identifies the topic — it is NOT a full account. The actual evidence (dates, q
 specifics) stays inside the doc_summaries; the section writer reads those directly.
 
 You receive:
-1. EXISTING_CLAIMS — topic claims from earlier loops. Each has id, statement, source_count.
+1. EXISTING_CLAIMS — topic claims from earlier loops. Each has topic, source_count, confidence.
 2. NEW_SUMMARIES — document summaries you have not yet processed (key_findings + quotes).
 
 For each topic in NEW_SUMMARIES, do exactly ONE of:
 
-(A) MERGE — the topic is already an EXISTING_CLAIM (same event, year, and entity, even if
-    worded differently).
-    - merges_into: the existing claim's id.
-    - return at most ONE record for each existing claim id. If multiplle new summaries support 
-      the same existing claim, combine their doc_ids in one source_doc_ids list.
-    - statement: copy the existing statement VERBATIM.
-    - source_doc_ids: the new doc_id(s) supporting this topic.
-    - confidence: "high" if combined sources >= 3, else medium.
+(A) MERGE — the topic already appears in EXISTING_CLAIMS (same event, year, and
+    entity, even if worded differently).
+    - topic: copy the existing topic label VERBATIM, character for character.
+    - source_doc_ids: ONLY the new doc_id(s) supporting it. Do not repeat doc_ids
+      already counted in the existing claim.
+    - Return at most ONE record per existing topic. If multiple new summaries
+      support it, combine their doc_ids into one source_doc_ids list.
+    - confidence: "high" if existing source_count + new sources >= 3, else "medium".
 
 (B) NEW — no existing claim covers this topic.
-    - merges_into: null.
-    - statement: short topic label, under ~80 chars where possible. Include the key
-      entity and date if applicable. Do NOT write a full explanatory sentence.
-    - source_doc_ids: doc_ids supporting this topic.
+    - topic: short label, under ~80 chars where possible. Include the key entity
+      and date if applicable. Do NOT write a full explanatory sentence.
+    - source_doc_ids: doc_ids from NEW_SUMMARIES supporting this topic.
     - confidence: high (>= 3 sources), medium (1-2), low (sources conflict).
 
-(C) DROP — the topic is too vague to be useful ("various challenges", "industry concerns",
-    "long-term trends"). Output nothing.
+(C) DROP — the topic is too vague to be useful ("various challenges", "industry
+    concerns", "long-term trends"). Omit it from the output entirely.
 
 Goal: ~one claim per distinct topic. Prefer fewer well-aggregated claims over many
 fragments. Single-source topics are OK if specific.
@@ -255,7 +245,7 @@ NEW_SUMMARIES:
 
 
 class ClaimSet(BaseModel):
-    claims: list[Claim] = Field(max_length=40)
+    claims: list[Claim] = Field(max_length=15) #bounding is expensive changed to 15. 
 
 
 async def extract_claims(state: OverallState) -> dict:
@@ -274,11 +264,16 @@ async def extract_claims(state: OverallState) -> dict:
         _emit(task_id, "claims_extracted", count=0, loop=loop)
         return {"claims": []}
 
-    existing_compact = [
-        {"id": c.id, "statement": c.statement, "source_count": len(c.source_doc_ids)}
-        for c in existing_claims
-    ]
-    existing_claims_json = json.dumps(existing_compact, ensure_ascii=False)
+    existing_claims_json = json.dumps(
+            [{
+                "topic": claim.topic,
+                "source_count": len(claim.source_doc_ids),
+                "confidence": claim.confidence,
+            } 
+            for claim in existing_claims
+        ], 
+        ensure_ascii=False,
+    )
     summaries_json = json.dumps(
         [{#don't need url or quotes this is just topic label. overview could be fine in itself.
             "doc_id": s.doc_id,
@@ -292,43 +287,108 @@ async def extract_claims(state: OverallState) -> dict:
     )
 
     structured = get_clients().structured_llm(ClaimSet)
-    result: ClaimSet = await structured.ainvoke([
-        {"role": "user", "content": EXTRACT_PROMPT.format(
-            question=state["original_query"],
-            existing_claims_json=existing_claims_json,
-            summaries_json=summaries_json,
-        )},
-    ])
 
-    existing_by_id = {c.id: c for c in existing_claims}
-    out: list[Claim] = []
+    result: ClaimSet = await get_clients().validated(
+        ClaimSet,
+        [{   
+            "role": "user", 
+            "content": EXTRACT_PROMPT.format(
+                question=state["original_query"],
+                existing_claims_json=existing_claims_json,
+                summaries_json=summaries_json,
+            ),
+        },],
+        tier="reasoner",
+        )
+    
+    existing_by_topic = {
+        claim.topic: claim
+        for claim in existing_claims
+    }
+
+    valid_new_doc_ids = {
+        summary.doc_id
+        for summary in new_relevant
+    }
+
+    output_claims: list[Claim] = []
+    seen_output_topics: set[str] = set()
+
     new_count = 0
     merged_count = 0
-    for ec in result.claims:
-        if ec.merges_into and ec.merges_into in existing_by_id:
-            # Re-emit with the SAME id — the merge_claims_by_id reducer will replace
-            # the existing entry with this merged version.
-            prev = existing_by_id[ec.merges_into]
-            combined = list(dict.fromkeys([*prev.source_doc_ids, *ec.source_doc_ids]))
-            out.append(Claim(
-                id=prev.id,
-                statement=prev.statement,  # keep canonical wording
-                source_doc_ids=combined,
-                confidence=ec.confidence,
-            ))
+
+    for generated in result.claims:
+        topic = generated.topic.strip()
+
+        if not topic:
+            logger.warning("extract_claims: dropped claim with empty topic")
+            continue
+
+        if topic in seen_output_topics:
+            logger.warning(
+                "extract_claims: duplicate topic returned in one call: %s",
+                topic,
+            )
+            continue
+
+        seen_output_topics.add(topic)
+
+        # Only accept document IDs from the new summaries supplied to this call.
+        new_source_doc_ids = list(
+            dict.fromkeys(
+                doc_id
+                for doc_id in generated.source_doc_ids
+                if doc_id in valid_new_doc_ids
+            )
+        )
+
+        if not new_source_doc_ids:
+            logger.warning(
+                "extract_claims: dropped topic '%s' because it had no valid "
+                "new source document IDs",
+                topic,
+            )
+            continue
+
+        previous = existing_by_topic.get(topic)
+
+        if previous is not None:
+            combined_doc_ids = list(
+                dict.fromkeys([
+                    *previous.source_doc_ids,
+                    *new_source_doc_ids,
+                ])
+            )
+
+            output_claims.append(
+                Claim(
+                    topic=previous.topic,
+                    source_doc_ids=combined_doc_ids,
+                    confidence=generated.confidence,
+                )
+            )
+
             merged_count += 1
+
         else:
-            out.append(Claim(
-                id=f"c_{uuid.uuid4().hex[:8]}",
-                statement=ec.statement,
-                source_doc_ids=ec.source_doc_ids,
-                confidence=ec.confidence,
-            ))
+            output_claims.append(
+                Claim(
+                    topic=topic,
+                    source_doc_ids=new_source_doc_ids,
+                    confidence=generated.confidence,
+                )
+            )
+
             new_count += 1
-    statements = [c.statement for c in out]
-    logger.debug("claims: %d new, %d merged", new_count, merged_count)
-    _emit(task_id, "claims_extracted", count=new_count, merged=merged_count, statements=statements)
-    return {"claims": out}
+
+    logger.debug(
+        "claims: %d new, %d merged",
+        new_count,
+        merged_count,
+    )
+    _emit(task_id, "claims_extracted", count=new_count, merged=merged_count, topics=[claim.topic for claim in output_claims])
+
+    return {"claims": output_claims}
 
 
 # ============================================================
@@ -355,6 +415,9 @@ New evidence added since the latest search loop:
 
 Queries already searched (do not repeat or paraphrase these):
 {previous_queries}
+
+Budget Line, loop count: 
+{budget_line}
 
 Decide whether the evidence is sufficient to write a credible report.
 
@@ -386,15 +449,36 @@ Output:
 async def reflect(state: OverallState) -> dict:
     task_id = state["task_id"]
     loop = state.get("research_loop_count", 0)
+    max_loops = state.get("max_research_loops", 3)
+    remaining = max_loops - loop
+
+    budget_line = (
+    f"This is research loop {loop + 1} of {max_loops}. "
+    + (
+        "This is your FINAL loop — no further searches will run. "
+        "Set is_sufficient=true and return no follow-up queries."
+        if remaining <= 1
+        else f"You have {remaining - 1} more loop(s) available after this one."
+    )
+)
 
     _emit(task_id, "stage", stage="reflecting", loop=loop)
 
-    #just checks if any new claims if not straight no waste time on call
-    existing_claims = state.get("claims", [])
-    covered_doc_ids = {did for c in existing_claims for did in c.source_doc_ids}
-    new_summaries = [s for s in state.get("doc_summaries", [])
-                    if s.relevant and s.doc_id not in covered_doc_ids]
-    loop = state.get("research_loop_count", 0)
+    relevant_summaries = [
+        s for s in state.get("doc_summaries", [])
+        if s.relevant
+    ]
+    alrd_reflected_ids = set(state.get("reflected_doc_ids", []))
+
+    previous_summaries = [
+        s for s in relevant_summaries
+        if s.doc_id in alrd_reflected_ids
+    ]
+    new_summaries = [
+        s for s in relevant_summaries
+        if s.doc_id not in alrd_reflected_ids
+    ]
+    
 
     if loop > 0 and not new_summaries:
         logger.warning("reflect: previous loop produced no new evidence — forcing sufficient")
@@ -410,7 +494,7 @@ async def reflect(state: OverallState) -> dict:
             is_sufficient=True,
             follow_up_queries=[],
         )
-        _emit(task_id, "reflection", sufficient=is_sufficient, current_understanding=result.current_understanding, knowledge_gap=result.knowledge_gap)
+        _emit(task_id, "reflection", sufficient=True, current_understanding=terminal.current_understanding, knowledge_gap=terminal.knowledge_gap)
         
         return {
         "is_sufficient": True,
@@ -421,22 +505,8 @@ async def reflect(state: OverallState) -> dict:
         "reflected_doc_ids": [],  # extends via operator.add
     }
         
-
-    relevant_summaries = [
-        s for s in state.get("doc_summaries", [])
-        if s.relevant
-    ]
-    alrd_reflected_ids = set(state.get("reflected_doc_ids", []))
-    previous_summaries = [
-        s for s in relevant_summaries
-        if s.doc_id in alrd_reflected_ids
-    ]
-    new_summaries = [
-        s for s in relevant_summaries
-        if s.doc_id not in alrd_reflected_ids
-    ]
     claims_index = json.dumps(
-        [{"id": c.id, "topic": c.statement, "sources": len(c.source_doc_ids),
+        [{"topic": c.topic, "sources": len(c.source_doc_ids),
           "confidence": c.confidence} for c in state["claims"]],
         ensure_ascii=False,
     )
@@ -473,35 +543,44 @@ async def reflect(state: OverallState) -> dict:
     prior_queries = state.get("search_queries", [])
     previous_queries = "\n".join(f"- {q.query}" for q in prior_queries) or "(none yet)"
 
-    structured = get_clients().structured_llm(ReflectionResult)
+    #structured = get_clients().structured_llm(ReflectionResultLLM)
 
-    result: ReflectionResult = await structured.ainvoke([
-        {"role": "user", "content": REFLECT_PROMPT.format(
+    draft: ReflectionResultLLM = await get_clients().validated(
+        ReflectionResultLLM,
+        [{"role": "user", "content": REFLECT_PROMPT.format(
             question=state["original_query"],
             reflection_history=previous_reflections,
             claims_index=claims_index,
             previous_evidence_json=previous_evidence_json,
             new_evidence_json=new_evidence_json,
             previous_queries=previous_queries,
-        ),},
-    ])
-    result = result.model_copy(update={"loop": loop})
+            budget_line=budget_line
+        ),}],
+        tier="reasoner"
+        )
     
     # Stamp IDs on follow-ups
     new_queries = [
         Query(id=f"q_{uuid.uuid4().hex[:8]}", query=q.query, rationale=q.rationale, category=q.category)
-        for q in result.follow_up_queries
+        for q in draft.follow_up_queries
     ]
     
-    if not result.is_sufficient and not new_queries:
+    if not draft.is_sufficient and not new_queries:
         logger.warning("reflect: all follow-ups were duplicates — forcing termination")
-    is_sufficient = result.is_sufficient or not new_queries
+    
+    result = ReflectionResult(
+        current_understanding=draft.current_understanding,
+        is_sufficient=draft.is_sufficient or not new_queries,
+        knowledge_gap=draft.knowledge_gap,
+        follow_up_queries=new_queries,
+        loop=loop,
+    )
 
-    _emit(task_id, "reflection", sufficient=is_sufficient, understanding=result.current_understanding, knowledge_gap=result.knowledge_gap,
+    _emit(task_id, "reflection", sufficient=result.is_sufficient, current_understanding=result.current_understanding, knowledge_gap=result.knowledge_gap,
           new_queries=len(new_queries))
     
     return {
-        "is_sufficient": is_sufficient,
+        "is_sufficient": result.is_sufficient,
         "search_queries": new_queries,  # extends via operator.add
         "research_loop_count": loop + 1,
         "reflection_history": [result],  # extends via operator.add
@@ -538,28 +617,38 @@ Evidence catalogue:
 {evidence_json}
 
 How to use the inputs:
-- Claims are topic handles. They identify issues the report may cover and map them to supporting documents.
-- The evidence catalogue contains the actual detail behind those claims.
-- Use the evidence to decide which claims genuinely belong together in a section.
-- Do not create a section whose angle is not supported by the supplied evidence.
-- Do not make separate sections for events or factors that are better explained together as one causal stage.
-- Do not force every minor claim into the report. Orphan weak or incidental claims if they do not help answer the question.
+
+- Claims are canonical topic handles.
+- Each claim topic maps to supporting document summaries.
+- The evidence catalogue contains the actual detail behind those topics.
+- Use the evidence to decide which topics belong together in a section.
+- Do not create a section whose angle is unsupported by the supplied evidence.
+- Do not force every minor topic into the report.
+- Avoid overlapping sections.
 
 Produce a report plan with 3-5 sections.
 
 Each section must:
-- Have a distinct, specific angle, not a generic heading.
-- Reference the claim IDs needed to write that section.
-- Avoid overlap with other sections.
-- Contain claims whose mapped evidence is sufficient to support the angle.
 
-Order sections logically for the question, for example chronologically, causally, or from core mechanism to consequences.
- 
-This is a structural plan, NOT the report. Do not write any prose, summaries, or analysis in any field:
-- title: the report title, max 12 words
-- angle: ONE sentence naming what the section covers — no elaboration, no findings, no content
-- claim_ids: only the relevant claim ID strings
-The section writer fills in the actual content later; your job is structure only."""
+- Have a distinct and specific angle.
+- Include the exact claim topic labels needed to write that section.
+- Copy claim topics exactly, character for character.
+- Never paraphrase, shorten, or invent a claim topic.
+- Contain only topics supported by the evidence catalogue.
+
+Order sections logically, such as chronologically, causally, or from mechanism
+to consequences.
+
+This is a structural plan, not the report.
+
+Output fields:
+
+- title: report title, maximum 12 words
+- sections:
+  - title: section title
+  - angle: one or two sentences describing the section scope
+  - claim_topics: exact topic strings copied from Topic claims
+"""
 
 async def plan_report(state: OverallState) -> dict:
     task_id = state["task_id"]
@@ -569,9 +658,12 @@ async def plan_report(state: OverallState) -> dict:
     final_understanding = history[-1].current_understanding if history else "No reflections yet"
     
     claims_json = json.dumps(
-        [{"id": c.id, "statement": c.statement,
-          "source_doc_ids": c.source_doc_ids, "confidence": c.confidence}
-         for c in state["claims"]],
+        [{"topic": c.topic,
+            "source_doc_ids": c.source_doc_ids, 
+            "confidence": c.confidence,
+            }
+            for c in state["claims"]
+        ],
         ensure_ascii=False,
     )
     evidence_json = json.dumps(
@@ -579,25 +671,63 @@ async def plan_report(state: OverallState) -> dict:
          for s in state["doc_summaries"] if s.relevant],
         ensure_ascii=False,
     )
-    structured = get_clients().struct_cheap_llm(ReportPlan)
+    structured = get_clients().struct_cheap_llm(ReportPlanLLM)
     
-    plan: ReportPlan = await structured.ainvoke([
-        {"role": "user", "content": PLAN_PROMPT.format(
+    result: ReportPlan = await structured.ainvoke([
+        {"role": "user", 
+         "content": PLAN_PROMPT.format(
             question=state["original_query"], final_understanding=final_understanding,
             claims_json=claims_json, evidence_json=evidence_json, 
-        )},
+            ),
+        },
     ])
-    # Stamp section IDs
+    available_topics = {
+        claim.topic
+        for claim in state.get("claims", [])
+    }
+
+    sections: list[SectionPlan] = []
+
+    for index, generated_section in enumerate(result.sections):
+        valid_topics = list(
+            dict.fromkeys(
+                topic
+                for topic in generated_section.claim_topics
+                if topic in available_topics
+            )
+        )
+
+        if not valid_topics:
+            logger.warning(
+                "plan_report: dropping section '%s' because it contains "
+                "no valid claim topics",
+                generated_section.title,
+            )
+            continue
+
+        sections.append(
+            SectionPlan(
+                id=f"s_{index}",
+                title=generated_section.title,
+                angle=generated_section.angle,
+                claim_topics=valid_topics,
+            )
+        )
+
+    if not sections:
+        raise ValueError(
+            "Report planner returned no sections containing valid claim topics"
+        )
+
     plan = ReportPlan(
-        title=plan.title,
-        sections=[
-            SectionPlan(id=f"s_{i}", title=s.title, angle=s.angle, claim_ids=s.claim_ids)
-            for i, s in enumerate(plan.sections)
-        ],
+        title=result.title,
+        sections=sections,
     )
+
     _emit(task_id, "plan_ready", 
           title=plan.title, 
-          sections=[{"title": s.title, "claim_count": len(s.claim_ids)} for s in plan.sections])
+          sections=[{"title": s.title, "claim_count": len(s.claim_topics)} for s in plan.sections],
+          )
     return {"plan": plan}
 
 
@@ -612,17 +742,16 @@ MAX_SUMMARIES_PER_SECTION = 8
 
 
 def fan_out_sections(state: OverallState) -> list[Send]:
-    claims_by_id = {c.id: c for c in state["claims"]}
+    claims_by_topic = {c.topic: c for c in state["claims"]}
     summaries_by_id = {
         s.doc_id: s for s in state["doc_summaries"] if s.relevant
     }
 
-    sends = []
+    sends: list[Send] = []
     for section in state["plan"].sections:
         section_claims = [
-            claims_by_id[cid] for cid in section.claim_ids if cid in claims_by_id
+            claims_by_topic[topic] for topic in section.claim_topics if topic in claims_by_topic
         ]
-
         # Score each supporting doc by how many of THIS section's claims it backs.
         # A doc covering 4 of the section's 5 claims is more central evidence than
         # one covering only 1. Tiebreak by summary richness (findings + quotes).
@@ -642,13 +771,17 @@ def fan_out_sections(state: OverallState) -> list[Send]:
         top_doc_ids = ranked_doc_ids[:MAX_SUMMARIES_PER_SECTION]
         section_summaries = [summaries_by_id[did] for did in top_doc_ids]
 
-        sends.append(Send("write_section", {
-            "task_id": state["task_id"],
-            "section": section,
-            "claims": section_claims,
-            "doc_summaries": section_summaries,
-            "original_query": state["original_query"],
-        }))
+        sends.append(
+            Send("write_section", 
+                {
+                    "task_id": state["task_id"],
+                    "section": section,
+                    "claims": section_claims,
+                    "doc_summaries": section_summaries,
+                    "original_query": state["original_query"],
+                },
+            )
+        )
     return sends
 
 
@@ -733,7 +866,6 @@ async def write_section(branch_input: dict) -> dict:
 
     # Match single OR grouped citations: [d_xxx] and [d_xxx, d_yyy]. Stays in lockstep
     # with search._CITE_RE so the audit field matches what the stitcher resolves.
-    cited_groups = re.findall(r"\[(d_[a-f0-9]+(?:\s*,\s*d_[a-f0-9]+)*)\]", body)
     cited_groups = re.findall(
         r"\[(d_[a-f0-9]{12}(?:\s*,\s*d_[a-f0-9]{12})*)\]",
         body,
@@ -763,33 +895,80 @@ async def write_section(branch_input: dict) -> dict:
 
 async def stitch_report(state: OverallState) -> dict:
     task_id = state["task_id"]
-    _emit(task_id, "stage", stage="stitching", message="Assembling final report")
-    
-    sections_by_id = {s.id: s for s in state["written_sections"]}
-    ordered = [
-        sections_by_id[sp.id]
-        for sp in state["plan"].sections
-        if sp.id in sections_by_id
+
+    _emit(
+        task_id,
+        "stage",
+        stage="stitching",
+        message="Assembling final report",
+    )
+
+    sections_by_id = {
+        section.id: section
+        for section in state["written_sections"]
+    }
+
+    ordered_sections = [
+        sections_by_id[planned.id]
+        for planned in state["plan"].sections
+        if planned.id in sections_by_id
     ]
 
-    docs_by_id = {d.id: d for d in state["raw_docs"]}
+    missing_section_ids = [
+        planned.id
+        for planned in state["plan"].sections
+        if planned.id not in sections_by_id
+    ]
 
-    cited_doc_ids = collect_ordered_doc_ids(ordered)
+    if missing_section_ids:
+        logger.warning(
+            "Missing written sections during stitching: %s",
+            missing_section_ids,
+        )
 
-    # Only real scraped documents may become numbered references.
-    ordered_doc_ids = [did for did in cited_doc_ids if did in docs_by_id]
+    docs_by_id = {
+        document.id: document
+        for document in state["raw_docs"]
+    }
+
+    cited_doc_ids = collect_ordered_doc_ids(ordered_sections)
+
+    invalid_doc_ids = [
+        doc_id
+        for doc_id in cited_doc_ids
+        if doc_id not in docs_by_id
+    ]
+
+    if invalid_doc_ids:
+        logger.warning(
+            "Unknown document IDs cited by section writers: %s",
+            invalid_doc_ids,
+        )
+
+    ordered_doc_ids = [
+        doc_id
+        for doc_id in cited_doc_ids
+        if doc_id in docs_by_id
+    ]
 
     doc_to_ref = {
-        did: i + 1
-        for i, did in enumerate(ordered_doc_ids)
+        doc_id: index
+        for index, doc_id in enumerate(ordered_doc_ids, start=1)
     }
 
     references = [
-        f"{doc_to_ref[did]}. [{docs_by_id[did].title or docs_by_id[did].url}]({docs_by_id[did].url})"
-        for did in ordered_doc_ids
+        (
+            f"{doc_to_ref[doc_id]}. "
+            f"[{docs_by_id[doc_id].title or docs_by_id[doc_id].url}]"
+            f"({docs_by_id[doc_id].url})"
+        )
+        for doc_id in ordered_doc_ids
     ]
 
-    intro_conclusion = await _write_intro_conclusion(state, ordered)
+    intro_conclusion = await _write_intro_conclusion(
+        state,
+        ordered_sections,
+    )
 
     report_parts = [
         f"# {state['plan'].title}",
@@ -798,21 +977,39 @@ async def stitch_report(state: OverallState) -> dict:
         "",
     ]
 
-    for sec in ordered:
-        rewritten = rewrite_citations(sec.body_markdown, doc_to_ref)
+    for section in ordered_sections:
+        rewritten = rewrite_citations(
+            section.body_markdown,
+            doc_to_ref,
+        )
         rewritten = merge_adjacent_numeric_cites(rewritten)
-        report_parts.extend([f"## {sec.title}", "", rewritten, ""])
+
+        report_parts.extend([
+            f"## {section.title}",
+            "",
+            rewritten,
+            "",
+        ])
 
     report_parts.extend([
-        "## Conclusion", "",
-        intro_conclusion["conclusion"], "",
-        "## References", "",
+        "## Conclusion",
+        "",
+        intro_conclusion["conclusion"],
+        "",
+        "## References",
+        "",
         *references,
     ])
 
-    final = "\n".join(report_parts)
-    _emit(task_id, "report_ready", length=len(final))
-    return {"final_report": final}
+    final_report = "\n".join(report_parts)
+
+    _emit(
+        task_id,
+        "report_ready",
+        length=len(final_report),
+    )
+
+    return {"final_report": final_report}
 
 class IntroConclusion(BaseModel):
     intro: str = Field(

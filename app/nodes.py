@@ -163,7 +163,7 @@ async def summarize_one_doc(branch_input: dict) -> dict:
                 question=branch_input["original_query"],
                 title=doc.title,
                 url=doc.url,
-                content=doc.snippet,
+                content=doc.content,
             )},],
             tier="cheap",
             )
@@ -286,7 +286,7 @@ async def extract_claims(state: OverallState) -> dict:
         ensure_ascii=False
     )
 
-    structured = get_clients().structured_llm(ClaimSet)
+    #structured = get_clients().structured_llm(ClaimSet)
 
     result: ClaimSet = await get_clients().validated(
         ClaimSet,

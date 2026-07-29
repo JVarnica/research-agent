@@ -79,7 +79,7 @@ async def search_query(
             id=_doc_id(url),
             url=url,
             title=(h.get("title") or ""),
-            snippet=(h.get("content") or ""), # searxng content
+            content=(h.get("content") or ""), # searxng content
             source_query_id=query.id,
             search_score=float(h.get("score", 0.0)),
             category=query.category,
@@ -123,7 +123,7 @@ async def scrape_hits(hits: list[Document]) -> list[Document]:
             id=hit.id,
             url=hit.url,
             title=hit.title,
-            snippet=content,
+            content=content,
             source_query_id=hit.source_query_id,
             search_score=hit.search_score,
         ))

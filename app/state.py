@@ -57,7 +57,7 @@ class Document(BaseModel):
     id: str
     url: str
     title: str
-    snippet: str
+    content: str
     source_query_id: str
     search_score: float = 0.0
 

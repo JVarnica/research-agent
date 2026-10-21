@@ -3,12 +3,19 @@ import json
 import logging
 import time
 import uuid
-from typing import Optional
+from typing import Any, Optional
 from enum import Enum
-
+from datetime import datetime
+from zoneinfo import ZoneInfo
 import redis.asyncio as aioredis
+from langfuse.langchain import CallbackHandler 
+from langfuse import get_client
+
 from .state import OverallState
 from .events import get_channel, remove_channel
+from .observability import ARM
+from .llm import VLLM_MODEL
+
 
 logger = logging.getLogger(__name__)
 
@@ -94,9 +101,34 @@ async def _run_graph(
     query: str,
     max_research_loops: int,
     graph,
+    redis: aioredis.Redis
+):
+    langfuse = get_client()
+    with langfuse.start_as_current_span(name="research-task") as root:
+        root.update_trace(session_id=task_id, input=query, tags=["research",ARM], 
+                            metadata={"model": VLLM_MODEL, "arm": ARM, "max_research_loops": max_research_loops}) 
+    #run graph
+    await _run_graph_impl(task_id, query, max_research_loops, graph, redis)
+    record = await get_task(redis, task_id)
+    if record:
+            output = {"status": record["status"],
+                      "report": record.get("final_report", ""),
+                      "error": record.get("error", "")}
+            root.update(output=output)
+            root.update_trace(output=output)
+            if record["status"] == TaskStatus.FAILED:
+                root.update(level="ERROR", status_message=record.get("error", ""))
+
+
+async def _run_graph_impl(
+    task_id: str,
+    query: str,
+    max_research_loops: int,
+    graph,
     redis: aioredis.Redis,
 ) -> None:
     """The actual graph runner. Runs in an asyncio.Task; exceptions are caught here."""
+   
     channel = get_channel(task_id)
     try:
         await _update_status(redis, task_id, TaskStatus.RUNNING)
@@ -124,8 +156,18 @@ async def _run_graph(
             "is_sufficient": False,
         }
         
-        config = {"configurable": {"thread_id": task_id},
-                  "recursion_limit": 35} # at 25 couldn't finish 3rd loop
+        config = {
+            "configurable": {"thread_id": task_id},
+            "max_concurrency": 2, # single-writer
+            "recursion_limit": 35, # at 25 couldn't finish 3rd loop
+            "callbacks": [CallbackHandler()],
+            "run_name": "deep_research",
+            "metadata": {
+                "langfuse_session_id": task_id,
+                "langfuse_tags": ["research"],
+                "max_research_loops": max_research_loops,
+            },
+        } 
 
         run_task = asyncio.create_task(graph.ainvoke(initial_state, config=config))
         watcher = asyncio.create_task(_cancel_watcher(redis, task_id, run_task))
@@ -142,7 +184,7 @@ async def _run_graph(
             "search_queries": [q.model_dump() for q in final_state.get("search_queries", [])],
         }
         await _update_status(redis, task_id, TaskStatus.COMPLETE, final_report=final_report)
-        await redis.set(f"dpr:artifacts:{task_id}", json.dumps(artifacts), ex=TASK_TTL_SECONDS)
+        await redis.set(f"dpr:artifacts:{task_id}", json.dumps(artifacts), ex=TASK_TTL_SECONDS)# useful for debugging to see artifacts created in time
         await channel.emit("complete", {"task_id": task_id, "report": final_report})
     
     except asyncio.CancelledError:
@@ -198,3 +240,12 @@ async def get_task(redis: aioredis.Redis, task_id: str) -> Optional[dict]:
     if not raw:
         return None
     return json.loads(raw)
+
+def today_str() -> str:
+    return datetime.now(ZoneInfo("Europe/London")).strftime("%A %d %B %Y")
+
+def _emit(task_id: str, event: str, **data: Any):
+    """Fire-and-forget event emission to Redis ."""
+    ch = get_channel(task_id)
+    asyncio.create_task(ch.emit(event, data)) # coroutine creation on events
+

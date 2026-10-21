@@ -9,11 +9,13 @@ import redis.asyncio as aioredis
 from fastapi import FastAPI
 
 from langgraph.checkpoint.redis.aio import AsyncRedisSaver
+from langfuse import get_client
 
 from .llm import init_clients, LLMClients
 from .graph import build_graph
 from .routes import router as research_router
 from .task import worker_loop
+from .observability import init_observability
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -43,7 +45,8 @@ async def lifespan(app: FastAPI):
     # --- LLM clients (httpx pools to vLLM) ---
     state.llm_clients = init_clients()
     logger.info("LLM clients initialized")
-    
+
+    await init_observability()
     # --- HTTP client for SearxNG + scraping ---
     state.search_http = httpx.AsyncClient(
         timeout=SEARCH_TIMEOUT,
@@ -84,6 +87,7 @@ async def lifespan(app: FastAPI):
         finally:
             # --- Shutdown ---
             logger.info("Shutting down")
+            
             try:
                 for t in state.worker_tasks:
                     t.cancel()
@@ -93,6 +97,7 @@ async def lifespan(app: FastAPI):
                 )
             except asyncio.TimeoutError:
                 logger.warning("Workers did not shut down within 10s, forcing exit")
+            get_client().flush()  # flush any pending events to LangFuse
             try:
                 await state.search_http.aclose()
             except Exception as e:

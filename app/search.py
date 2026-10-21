@@ -83,6 +83,7 @@ async def search_query(
             source_query_id=query.id,
             search_score=float(h.get("score", 0.0)),
             category=query.category,
+            engine=(h.get("engine") or "")
         ))
     logger.info(f"query '{query.query}': {len(hits)} raw hits, {len(out)} scrapeable new hits")
     return out
@@ -126,6 +127,7 @@ async def scrape_hits(hits: list[Document]) -> list[Document]:
             content=content,
             source_query_id=hit.source_query_id,
             search_score=hit.search_score,
+            engine=hit.engine,
         ))
     docs.sort(key=lambda d: d.search_score, reverse=True)
     logger.info(f"scrape: {len(hits)} candidates → {len(docs)} good docs")

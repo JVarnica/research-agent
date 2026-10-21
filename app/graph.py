@@ -1,18 +1,10 @@
 from langgraph.graph import StateGraph, START, END
-from langgraph.checkpoint.redis import AsyncRedisSaver
 
 from .state import OverallState
-from .nodes import (
-    generate_queries,
-    search_queries_seq, 
-    fan_out_summarize, summarize_one_doc,
-    extract_claims,
-    reflect, reflect_router,
-    plan_report,
-    fan_out_sections, write_section,
-    stitch_report, scrape_node
-)
-
+from .retrieval import generate_queries, search_queries_seq, scrape_node
+from .evidence import fan_out_summarize, summarize_one_doc, extract_claims
+from .reflect import reflect, reflect_router
+from.plan_write import plan_report, fan_out_sections, write_section, stitch_report
 
 def build_graph(checkpointer=None):
     g = StateGraph(OverallState)
@@ -30,8 +22,7 @@ def build_graph(checkpointer=None):
     
     # ---- Edges ----
     g.add_edge(START, "generate_queries")
-    
-    # Fan-out to search (conditional edge returning list[Send])
+    #sequential so know what queries been searched
     g.add_edge("generate_queries", "search_all_queries")
 
     # Pre-scrape filter for good url

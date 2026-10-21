@@ -3,7 +3,7 @@ from __future__ import annotations
 import operator
 from typing import TypedDict, Annotated, Literal
 from typing_extensions import NotRequired
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class QueryLLM(BaseModel):
@@ -60,6 +60,7 @@ class Document(BaseModel):
     content: str
     source_query_id: str
     search_score: float = 0.0
+    engine: str 
 
 
 class DocSummaryLLM(BaseModel):
@@ -67,23 +68,25 @@ class DocSummaryLLM(BaseModel):
     Schema fields are deliberate: `relevant` forces a yes/no commitment, 
     `key_findings` forces specificity, `quotes` provide auditable evidence."""
     relevant: bool = Field(description="Does this doc actually help answer the question?")
-    overview: str = Field(
-        default="",
+    overview: str = Field(default="",
         description=(
             " 1-3 sentences: what this document covers, its angle, scope, or argument. "
             "Helps the section writer use this source in context rather than as "
-            "disconnected facts. Empty string if not relevant."
-        ),
-        max_length = 400
-    )
-    key_findings: list[str] = Field(
-        description="3-8 specific findings, each stating a date, number, named person/place/event. No more than 3 sentences the finding. Empty list if not relevant.",
-        max_length=8,
-    )
-    quotes: list[str] = Field(
-        description="Up to 4 short supporting quotes backing a finding. Optional (<25 words each)",
-        max_length=4,
-    )
+            "disconnected facts. Empty string if not relevant."))
+    key_findings: list[str] = Field(description="3-6 specific findings, each stating a date, number, named person/place/event. No more than 3 sentences the finding. Empty list if not relevant.")
+    quotes: list[str] = Field(description="Up to 4 short supporting quotes backing a finding.")
+
+    @field_validator("overview")
+    @classmethod
+    def _cap_overview(cls, v: str) -> str:
+        return v[:400]
+    
+    @field_validator("key_findings", "quotes")
+    @classmethod
+    def _cap_lists(cls, v: list[str]) -> list[str]:
+        return [s[:300] for s in v[:5]]
+
+    
 
 class DocSummary(DocSummaryLLM):
     doc_id: str

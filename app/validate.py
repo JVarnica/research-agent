@@ -11,9 +11,12 @@ from __future__ import annotations
 import json
 import logging
 import re
+from time import perf_counter
 from typing import Type, TypeVar
 from langchain_core.language_models import BaseChatModel
 from pydantic import BaseModel, ValidationError
+
+from .budget import ContextBudgetError
 
 T = TypeVar("T", bound=BaseModel)
 logger = logging.getLogger(__name__)
@@ -89,18 +92,50 @@ async def ainvoke_validated(
           max_attempts: int = 3,
           guided_fallback: BaseChatModel | None = None,
           stats: dict | None = None,
+          budgeter: None,
+          node: str = "default",
+          budget=None,
+          thinking: bool = False,
+          guided_base=None,
 ) -> T:
     """Free generation + pydantic validation + validation error feedback retry.
      schema what we validate against
      max_attempts means max 3 retries before guided_fallback which is constrained 
      decoding.
     """
-
-    convo = _with_schema(messages,schema) #appends schema
+    if max_attempts < 1:
+        raise ValueError("max_attempts must be at least 1")
+    if stats is not None:
+        stats.update(attempts=0, fallback_used=False, validation_errors=[], attempt_latency_ms=[])
+   
+    base_convo = _with_schema(messages,schema) 
+    convo = base_convo #appends schema
     last_err: Exception | None = None
 
     for attempt in range(1, max_attempts + 1):
-        resp = await llm.ainvoke(convo)
+        started = perf_counter()
+        if stats is not None:
+            stats["attempts"] = attempt
+        try:
+            active = llm
+            if budgeter is not None:
+                try:
+                    count, cap = await budgeter.allowance(
+                        convo, node=node, budget=budget, thinking=thinking)
+                except ContextBudgetError:
+                    if convo is base_convo:
+                        raise
+                    #Oversized failed output must not consume the next attempt.
+                    convo = base_convo
+                    count, cap = await budgeter.allowance(
+                        convo, node=node, budget=budget, thinking=thinking)
+                active = llm.bind(max_tokens=cap)
+                if stats is not None:
+                    stats.setdefault("budgets", []).append({"input": count, "output": cap})
+            resp = await active.ainvoke(convo)
+        finally:
+            if stats is not None:
+                stats["attempt_latency_ms"].append(round((perf_counter() - started) * 1000, 3))
         raw = resp.content if isinstance(resp.content, str) else str(resp.content)
         candidate = extract_json(raw)
 
@@ -119,26 +154,42 @@ async def ainvoke_validated(
             # Truncate: pydantic errors on big lists can be enormous, and we
             # only need enough for the model to locate the problem.
             err_text = _format_errors(e)
+            if stats is not None:
+                stats["validation_errors"].append(err_text.splitlines()[0])
             logger.warning(
                 "validation failed for %s (attempt %d/%d): %s",
                 schema.__name__, attempt, max_attempts, err_text.splitlines()[0],
             )
             if attempt < max_attempts:
-                convo = convo + [
+                convo = base_convo + [
                      {"role": "assistant", "content": _THINK_RE.sub("",raw)},
                      {"role": "user", "content": _RETRY_TEMPLATE.format(errors=err_text)},
                 ]
-    
     if stats is not None:
         stats.update(attempts=max_attempts, fallback_used=guided_fallback is not None)
-
 
     if guided_fallback is not None:
         logger.warning(
             "%s: %d free attempts failed — falling back to guided decoding",
             schema.__name__, max_attempts,
         )
-        return await guided_fallback.ainvoke(messages)
+        started = perf_counter()
+        try:
+            active_fallback = guided_fallback
+            fallback_messages = messages
+            if budgeter is not None:
+                fallback_messages = base_convo
+                count, cap = await budgeter.allowance(
+                    fallback_messages, node=node, budget=budget, thinking=False)
+                active_fallback = guided_base.model_copy(
+                    update={"max_tokens": cap}).with_structured_output(schema, method="json_schema")
+                if stats is not None:
+                    stats["fallback_budgets"] = {"input": count, "output": cap}
+            return await active_fallback.ainvoke(fallback_messages)
+        finally:
+            if stats is not None:
+                stats["fallback_latency_ms"] = round((perf_counter() - started) * 1000, 3)
+        
     
     raise last_err # type: ignore[misc]
 

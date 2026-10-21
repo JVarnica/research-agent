@@ -58,4 +58,4 @@ docker compose up -d deep-research
 
 - [ExecuChat](https://github.com/JVarnica/Execu_Chat) — Android frontend
 - [vllm-server](https://github.com/JVarnica/vllm-server) — backend stack
-- Write-ups: [making a research agent](https://jvarnica.github.io/Research-agent/) · [incrementally building research agents](https://jvarnica.github.io/Building-research-agent/)
+- Write-ups: [Research agent hub](https://jvarnica.github.io/projects/research-agent-hub/) · [incrementally building research agents](https://jvarnica.github.io/Building-research-agent/)
